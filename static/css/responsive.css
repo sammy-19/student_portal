@@ -1,0 +1,125 @@
+/* Responsive Styles for Screens 560px and Below */
+/* Media Queries for Screens 560px and Below */
+@media (max-width: 480px) {
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Reduce font sizes for small screens */
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1.2rem; /* Adjusted font size */
+    line-height: 1.3;
+}
+
+p, li, a, .nav-link {
+    font-size: 0.9rem; /* Smaller font for content */
+    line-height: 1.4;
+}
+
+/* Override Bootstrap padding and margin */
+.container, .row, .col {
+    padding: 5px !important;
+    margin: 0 !important;
+}
+
+/* Navbar Adjustments */
+.navbar {
+    padding: 10px;
+}
+
+.navbar-brand {
+    font-size: 1.2rem; /* Smaller brand text */
+}
+
+.navbar-nav .nav-item {
+    margin: 0 5px;
+}
+
+.navbar-nav .nav-link {
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+/* Card and Content Styling */
+.card {
+    margin-bottom: 15px;
+    padding: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+/* Table Adjustments */
+.table {
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.table th, .table td {
+    padding: 8px;
+}
+
+/* Align everything neatly */
+ul, ol, li {
+    padding: 5px;
+    margin: 5px;
+}
+
+/* Footer */
+footer {
+    font-size: 0.9rem;
+    padding: 15px;
+}
+
+
+    body {
+        font-size: 0.85rem; /* Default smaller font */
+    }
+
+    .navbar-brand {
+        font-size: 1rem; /* Smaller navbar brand */
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 0.85rem;
+    }
+
+    .container, .row {
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    /* Align columns in a single vertical flow */
+    .col {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Ensure all buttons and content fit well */
+    button, .btn {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    /* Adjust table styling */
+    .table {
+        font-size: 0.7rem;
+    }
+    
+    .card-header, .card-body {
+        padding: 8px;
+    }
+
+    /* Footer adjustment */
+    footer {
+        font-size: 0.8rem;
+    }
+}

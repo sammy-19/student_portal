@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>  
+{% endblock log %}
+
+{% block content %}
+<h2>Create New Course</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Course Name</label>
+        <input type="text" class="form-control" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Course Description</label>
+        <textarea class="form-control" name="description" rows="4" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Course</button>
+</form>
+<a href="{% url 'lecturers:lecturer_dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+{% endblock %}

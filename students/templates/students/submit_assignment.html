@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        
+        <li><a href="{% url 'students:student_dashboard' %}" class="nav-link">Dashboard</a></li>
+        <li><a href="{% url 'students:announcement_view' %}" class="nav-link">Announcements</a></li>
+        <li><a href="{% url 'students:std_logout' %}" class="nav-link">Logout</a></li>
+    </ul>
+</div>
+{% endblock log %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>Submit Assignment</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Assignment Title</th>
+                    <th>Course Name</th>
+                    <th>Lecturer Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ assignment.title }}</td>
+                    <td>{{ assignment.course.name }}</td>
+                    <td>{{ assignment.lecturer.first_name.capitalize }} {{ assignment.lecturer.last_name.capitalize }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

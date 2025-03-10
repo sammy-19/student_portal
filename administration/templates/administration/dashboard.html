@@ -1,0 +1,81 @@
+<!-- administration/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'administration:admin_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'administration:admin_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>
+{% endblock log %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Administration Dashboard</h2>
+
+    <div class="row">
+        <!-- List Students Section -->
+        <div class="col-md-6">
+            <h3>Students</h3>
+            <ul>
+                {% for student in students %}
+                    <li>{{ student.user }}</li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'administration:student_list' %}" class="btn btn-primary">View All Students</a>
+            <a href="{% url 'administration:register_student' %}" class="btn btn-secondary">Register Student</a>
+        </div>
+
+        <!-- List Lecturers Section -->
+        <div class="col-md-6">
+            <h3>Lecturers</h3>
+            <ul>
+                {% for lecturer in lecturers %}
+                    <li>{{ lecturer.user.first_name }} {{ lecturer.user.last_name }}</li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'administration:list_lecturers' %}" class="btn btn-primary">View All Lecturers</a>
+            <a href="{% url 'administration:register_lecturers' %}" class="btn btn-secondary">Register Lecturer</a>
+        </div>
+    </div>
+
+    <!-- Announcements Section -->
+    <div class="mt-4">
+        <h3>Create Announcements</h3>
+        <form method="POST" action="{% url 'administration:create_announcement' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="announcement">Announcement</label>
+                <textarea class="form-control" id="announcement" name="announcement" rows="3" placeholder="Anonymous Announcement" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Send Announcement</button>
+        </form>
+    </div>
+</div>
+
+<!-- Form section in dashboard.html -->
+<form method="POST" action="{% url 'administration:create_announcement' %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="title">Announcement Title</label>
+        <input class="form-control" id="title" name="title" placeholder="Announcement Title" max="100" required>
+        <label for="announcement">Message</label>
+        <textarea class="form-control" id="announcement" name="announcement" rows="3" placeholder="Message..." required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="target_group">Target Group</label>
+        <select class="form-control" id="target_group" name="target_group">
+            <option value="students">Students</option>
+            <option value="lecturers">Lecturers</option>
+            <option value="both">Both</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Send Announcement</button>
+</form>
+
+{% endblock %}

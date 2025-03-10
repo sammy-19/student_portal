@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>
+{% endblock log %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if submissions %}
+        <h2>Assignment Submissions</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Student Number</th>
+                    <th>Course</th>
+                    <th>Assignment</th>
+                    <th>Submission Date</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in submissions %}
+                <tr>
+                    <td>{{ submission.student.user }}</td>
+                    <td>{{ submission.student.student_number }}</td>
+                    <td>{{ submission.assignment.course.name }}</td>
+                    <td>{{ submission.assignment.title }}</td>
+                    <td>{{ submission.submitted_at }}</td>
+                    <td><a href="{{ submission.file.url }}" class="btn btn-primary" download>Download Submission</a><br><a href="{% url 'lecturers:delete_submission' submission.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No submissions yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2>No submissions yet.</h2>
+    {% endif %}
+
+    <!-- Back to Dashboard -->
+    <a href="{% url 'lecturers:lecturer_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

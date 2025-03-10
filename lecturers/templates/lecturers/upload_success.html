@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Course Material Uploaded Successfully</h2>
+    <a href="{% url 'lecturers:lecturer_dashboard' %}" class="btn btn-primary">Upload More Materials</a>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>
+{% endblock log %}
+
+{% block content %}
+<div class="container">
+    <h2>Assign Courses to Programme</h2>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Select Programme -->
+        <div class="form-group">
+            <label for="programme">Select Programme:</label>
+            <select id="programme" name="programme" class="form-control">
+                {% for programme in programmes %}
+                <option value="{{ programme.id }}">{{ programme.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select Courses -->
+        <div class="form-group">
+            <label for="courses">Select Courses:</label>
+            <select id="courses" name="courses" class="form-control" multiple>
+                {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Assign Courses</button> <a class="nav-link" href="{% url 'lecturers:assign_courses' %}"><button class="btn btn-secondary">Back to Dashboard</button></a>
+    </form>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% load static %}
+{% load youtube_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal: Jasperstone College of Applied Sciences and Technology</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/video.css' %}">
+</head>
+<body>
+    <header class="header">
+        <h1>Student Portal</h1>
+        <nav>
+            <div class="menu-button" id="menuButton" onclick="dropDown()">
+                <div class ="bar bar1"></div>
+                <div class ="bar bar2"></div>
+                <div class ="bar bar3"></div>
+            </div>
+            <script>
+                const menuButton = document.getElementById('menuButton');
+                menuButton.addEventListener('click', () => {
+                    menuButton.classList.toggle('open');
+                });
+            </script>
+            <div id="dpdown">
+                <h1>Student Portal</h1>
+                <ul>
+                    <li><a href="{% url 'students:student_dashboard' %}" class="nav-link">Dashboard</a></li>
+                    <li><a href="{% url 'students:announcement_view' %}" class="nav-link">Announcements</a></li>
+                    <li><a href="{% url 'students:std_logout' %}" class="nav-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container pseudo-line">
+        <aside class="sidebar">
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Assignments</a></li>
+                <li><a href="#">Grades</a></li>
+		        <li><a href="#">Courses</a></li>
+            </ul>
+        </aside>
+
+        <section id="page1" class="content">
+            <div>
+                <h4 id="datetime"></h4>
+            </div>
+            <h2>Welcome, {{ student.user.username }}</h2>
+            <h2>{{ programme }} Programme Student</h2>
+            <h4><strong>Course Duration:</strong> <span style="color: darkgreen"> {{ student.duration_years }} years</span></h4>
+            <h4><strong>Current Year | Semester:</strong> <span style="color: darkgreen">Year {{ current_year }} </span> | <span style="color: darkgreen">Semester {{ current_semester }} </span></h4>
+            <!-- Displaying the lecturer -->
+                {% for assignment in assignments%}
+                    <p>Assigned Lecturer: {{ assignment.lecturer.first_name }} {{ assignment.lecturer.last_name }}</p>
+                {% endfor %}
+            <br>
+            <button class="btn btn-primary btn-pri"><a class="nav-link" style="color: white; text-decoration: none" href="{% url 'students:view_courses' %}">View Courses</a></button>
+            <button class="btn btn-secondary btn-sec">Check Notifications</button>
+        </section>
+
+        <section id="page2" class="content">
+            <h1>Tasks & Assignment</h1>
+                <!-- Assignments Section -->
+            <article class="assignments">
+                <h3>Assignments</h3>
+                <div class="assignment-list">
+                    <h4>Posted Assignments</h4>   
+                    <ul style="list-style: none">
+                        {% for assignment in assignments %}
+                            <li class="list-group-item">
+                                <strong>{{ assignment.title }}</strong> - {{ assignment.description }} (Due: {{ assignment.due_date }})
+                                <br>
+                                <small>Course: {{ assignment.course.name }} | Lecturer: {{ assignment.lecturer.first_name }} {{ assignment.lecturer.last_name }}</small>
+                            </li><br>
+                            <li class="top-spacer"><a href="{% url 'students:submit_assignment' assignment.id %}" class="btn btn-primary">Submit Assignment</a></li><hr>
+                        {% empty %}
+                            <li>No assignments available for your programme yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+        </section>
+
+        <section id="page3"class="content" >
+            <h2>Grades</h2>
+            <div class="grades-list">
+                <h3>Your Results</h3>
+                <table class="table" border="1">
+                    <thead>
+                        <tr>
+                            <th>Assignment</th>
+                            <th>Percentage Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                        <tr>
+                            <td>{{ result.assignment.title }}</td>
+                            <td>{{ result.grade }}%</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2">No results available yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="progress">
+                <h3>Overall Progress</h3>
+                <div class="progress-bar" role="progressbar" style="width: {{ overall_progress }}%;" aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <p>Your Progress: {{ overall_progress }}%</p>
+                </div>
+            </div>
+        </section>
+
+	    <section id="page4" class="content">
+            <div class="class-container">
+                <article class="materials">
+                    <h2>My Courses</h2>
+        
+                    <div class="material-section">
+                        <h3>{{ student.program_of_study.name }} Courses</h3>
+                        <div class="sub-container">
+                            {% for course in assigned_courses %}
+                            <div class="course-info">
+                                <h3><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3>
+                            </div>
+                            {% empty %}
+                            <div class="course-info">No courses assigned yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Jasperstone College</p>
+    </footer>
+
+    <script src="{% static 'js/my_scripts.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    <script src="{% static 'js/time.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
+</body>
+</html>

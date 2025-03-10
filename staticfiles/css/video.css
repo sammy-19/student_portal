@@ -1,0 +1,154 @@
+/* video.css */
+
+.contents {
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+}
+
+/* ... (Previous CSS) ... */
+.course-container {
+    width: 90%;  /* Use percentage for responsiveness */
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    padding: 10px; /* Reduced padding for small screens */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.video-header {
+    display: flex;
+    justify-content: space-between; /* Align title and progress */
+    align-items: center; /* Vertically center items */
+    margin-bottom: 15px;
+}
+
+.video-header h2 {
+  margin: 0; 
+  font-size: 1.2em;
+}
+
+.video-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between count and progress bar */
+    font-size: 0.9em;
+}
+
+.progress-circle {
+    width: 40px;        /* Fixed size for the circle */
+    height: 40px;
+    border-radius: 50%; /* Make it a circle */
+    background-color: #f0f0f0; /* Light gray background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;  /* For absolute positioning of percentage */
+}
+
+.progress-circle::before { /* This creates the progress fill */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(#007bff 0% 0%, #9ea09f 0% 100%); /* Initial state, 0% progress*/
+}
+
+#progress-percentage {
+    position: relative; /* Bring the text above the conic-gradient */
+    z-index: 2;          /* Ensure text is on top */
+    color: #333;
+}
+
+#video-container {
+    margin-bottom: 20px;
+}
+
+.video-item {
+    text-align: center;
+}
+
+.video-item h3 {
+    margin-bottom: 10px;
+    font-size: 1em; /* Responsive font size */
+}
+
+.video-item video {
+    width: 100%;
+    max-width: 100%; /* Ensure video doesn't overflow */
+    height: 60vh;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: block; /* Remove any extra space below inline-block */
+    margin: 0 auto; /* Center horizontally */
+}
+
+.video-item p {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 0.9em; /* Slightly smaller font for description */
+}
+
+.course-navigation {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.nav-button, .back-button { /* Style both button types together */
+    padding: 8px 16px; /* Smaller padding for small screens */
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 5px; /* Consistent margin */
+    display: inline-block; /* Allow margin and padding to work */
+    font-size: 0.9em;  /* Smaller font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.nav-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.nav-button:hover, .back-button:hover {
+    background-color: #0056b3;
+}
+
+.completed {
+    background-color: #e0f7e0;
+    padding: 8px; /* Smaller padding */
+    border: 1px solid #c8e6c9;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 0.85em; /* Smaller font size */
+}
+
+
+/* Media Query for very small screens (optional, adjust as needed) */
+@media (max-width: 480px) {
+    .course-container {
+        padding: 5px; /* Even smaller padding */
+    }
+  .video-header{
+    flex-direction: column;
+  }
+
+    .nav-button, .back-button {
+        padding: 6px 12px; /* Further reduce padding */
+        font-size: 0.8em;
+    }
+    .progress-circle{
+      width: 30px;
+      height: 30px;
+    }
+    #progress-percentage{
+      font-size: 0.7em;
+    }
+}

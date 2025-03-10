@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Course: {{ course.name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Course Name</label>
+        <input type="text" class="form-control" name="name" value="{{ course.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Course Description</label>
+        <textarea class="form-control" name="description" rows="4" required>{{ course.description }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+{% endblock %}

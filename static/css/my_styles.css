@@ -1,0 +1,392 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: darkgreen;
+    color: white;
+}
+
+
+
+header a {
+    text-decoration: none;
+    color: rgb(255, 247, 0) !important;
+}
+
+.space {
+    padding: 12px;
+}
+
+header {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.menu-btn {
+    display: none;
+    cursor: pointer;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+
+li.nav-item a.nav-link {
+    color: rgb(0, 179, 255) !important;
+    font-weight: bold;
+}
+
+.container {
+    display: flex;
+    margin: auto;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    min-height: 75vh;
+    background-color: black;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: yellow;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li button {
+    color: black;
+    background-color: white;
+    font-size: 1.1em;
+}
+
+.sidebar ul li button.active {
+    font-weight: bold;
+    color: yellow;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar ul li a.active {
+    font-weight: bold;
+    background-color: darkgreen;
+    color: yellow;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+
+/* Main Content */
+.content {
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding: 30px;
+    box-shadow: 4px -5px 6px rgb(71, 73, 71);
+    overflow: hidden;
+}
+
+.content h2 {
+    color: darkgreen;
+}
+
+.content button {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    margin-right: 10px;
+    border: none;
+    box-shadow: 3px 4px solid gray;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Buttons */
+
+.top-spacer {
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 5px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    box-shadow: 2px 2px 4px burlywood, inset 2px 2px 4px gray;
+}
+
+.btn-primary {
+    background-color: darkgreen;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: yellow;
+    color: black;
+}
+
+.btn-danger {
+    background-color: rgb(201, 37, 37);
+    color: white;
+}
+
+.btn-warning {
+    background-color: rgba(210, 210, 33, 0.913);
+    color: black;
+}
+
+.table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th, .table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Students Progress Bar*/
+/*Grades or results progress bar*/
+.progress-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background-color: green;
+    border-radius: 10px 0 0 10px;
+}
+
+.sub-container {
+    width: 90%;
+    display: flex;
+    padding: 5px;
+    overflow-x: auto;
+}
+
+.course-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 200px;
+    min-height: 150px;
+    margin: 5px 20px;
+    padding: 20px;
+    box-shadow: 1px 2px 2px rgba(14, 14, 15, 0.5), -2px -3px 2px rgba(14, 14, 15, 0.5);
+    border-radius: 16px;
+}
+
+.course-info h3 {
+    text-align: center;
+    padding-left: 10%;
+}
+
+.course-info:hover {
+    background-color: rgb(209, 206, 206);
+}
+
+.course-info:active {
+    box-shadow: 2px 3px 2px rgba(14, 14, 15, 0.5), -1px -2px 1px rgba(14, 14, 15, 0.5);
+}
+
+#dpdown h1 {
+    display: none;
+}
+
+/* Footer */
+footer {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Tablet and Smaller Desktops */
+@media (max-width: 768px) {
+
+    header {
+        width: auto;
+        padding: auto;
+    }
+    
+    .sidebar, .content {
+        width: 100%;
+        min-height: auto;
+        padding: 10px;
+    }
+
+    nav ul {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .pseudo-line::before {
+        display: block;
+        content: "";
+        height: 3px;
+        margin: 0;
+        background: linear-gradient(90deg, #8c969c, #99909c);
+
+    }
+
+    .container {
+        flex-direction: column;
+        overflow: hidden;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 660px) {
+    .header {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 1.5em;
+    }
+
+    .menu-button {
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        right: 1.5%;
+        cursor: pointer;
+    }
+
+    nav ul {
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .bar {
+        width: 100%;
+        height: 4px;
+        background-color: #99909c;
+        position: absolute;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .bar1 {
+        top: 0;
+    }
+
+    .bar2 {
+        top: 13px;
+    }
+
+    .bar3 {
+        top: 26px;
+    }
+
+    .menu-button.open .bar1 {
+        transform: translateY(13px) rotate(45deg);
+    }
+
+    .menu-button.open .bar2 {
+        opacity: 0;
+    }
+
+
+    .menu-button.open .bar3 {
+        transform: translateY(-13px) rotate(-45deg);
+    }
+
+    #dpdown {
+        display: none;
+        transition: opacity 0.5s ease-in-out;
+        position: fixed;
+        padding: auto;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 60%;
+        height: 100vh;
+        background-color: rgba(25, 26, 26, 0.4);
+        backdrop-filter: blur(20px);
+    }
+    
+    #dpdown.show {
+        display: block;
+    }
+
+    #dpdown li, #dpdown h1 {
+        margin: 0;
+        padding: 20px 10px;
+        width: 90%;
+        display: block;
+    }
+
+    #dpdown li:hover {
+        background-color: rgb(8, 56, 8);
+    }
+    
+    #dpdown a {
+        color: white;
+        text-decoration: none;
+        font-size: 120%;
+    }
+
+    .sidebar {
+        padding: 10px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .content h2 {
+        font-size: 1.2em;
+    }
+
+    .content button {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+
+    footer {
+        padding: 5px;
+    }
+}

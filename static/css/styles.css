@@ -1,0 +1,122 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #1c9956;
+}
+
+header {
+    background-color: #2b925b;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+}
+
+h2, h3 {
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th, .table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+footer {
+    margin-top: 75px;
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 24px;
+    background-color: #1e885f;
+    color: #f4f4f4;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #1c9956 !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: #282323 !important;
+}
+
+.nav-link:hover {
+    color: #d4e157 !important;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    footer {
+        font-size: 1rem;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 560px) {
+    header, a, .container h1 {
+        font-size: 1.6rem !important;
+    }
+    .navbar-brand {
+        font-size: 1.2rem !important;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    footer {
+        font-size: 0.9rem;
+        padding: 24px;
+    }
+}

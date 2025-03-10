@@ -1,0 +1,87 @@
+{% load static %}
+{% load youtube_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal: Jasperstone College of Applied Sciences and Technology</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/video1.css' %}">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Student Portal</h1>
+        <nav>
+            <div class="menu-button" id="menuButton" onclick="dropDown()">
+                <div class="bar bar1"></div>
+                <div class="bar bar2"></div>
+                <div class="bar bar3"></div>
+            </div>
+            <script>
+                const menuButton = document.getElementById('menuButton');
+                menuButton.addEventListener('click', () => {
+                    menuButton.classList.toggle('open');
+                });
+            </script>
+            <div id="dpdown">
+                <h1>Student Portal</h1>
+                <ul>
+                    <li><a href="{% url 'students:student_dashboard' %}" class="nav-link">Dashboard</a></li>
+                    <li><a href="{% url 'students:announcement_view' %}" class="nav-link">Announcements</a></li>
+                    <li><a href="{% url 'students:std_logout' %}" class="nav-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="material-section">
+            <h3>Videos</h3>
+            <div class="video-grid">
+                {% for material in course_materials %}
+                    {% if material.is_video or material.video_link %}
+                        <div class="video-item">
+                            {% if material.is_video %}
+                                <video controls>
+                                    <source src="{{ material.video_file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% elif material.video_link %}
+                                <div class="video-wrapper">
+                                    <iframe width="560" height="315" src="http://www.youtube.com/embed/{{ material.video_link|youtube_id }}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                </div>
+                            {% endif %}
+
+                            <div class="video-details">
+                                <p>{{ material.title }}: {{ material.course }}</p>
+
+                                {% if material.notes_file %}
+                                    <a href="{{ material.notes_file.url }}" download="{{ material.title }}_notes.pdf"
+                                        class="download-notes">Download Lecture Notes</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2024 Jasperstone College</p>
+    </footer>
+
+    <script src="{% static 'js/my_scripts.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    <script src="{% static 'js/time.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
+
+</body>
+</html>

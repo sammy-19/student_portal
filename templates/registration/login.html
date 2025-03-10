@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal: Jasperstone College of Applied Sciences and Technology</title>
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="login-container">
+        <div class="login-card">
+            <h2> Jasperstone Student Portal</h2>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if form.errors %}
+                <div class="error-message">Invalid Credentials</div>
+            {% endif %}
+            <form id="loginForm" method="post" class="login-form">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    {{ form.username }}
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    {{ form.password }}
+                    <small class="error-message" id="passwordError"></small>
+                </div>
+                <button type="submit" class="login-button">Login</button>                <div class="forgot-password">
+                    <a href="#">Forgot your password?</a>
+                    <a href="{% url 'lecturers:lecturer_login' %}">Lecturer Login! Click here</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+
+{% block content %}
+
+{% endblock %}

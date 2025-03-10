@@ -1,0 +1,69 @@
+<!-- lecturers/templates/lecturers/grade_assignment.html -->
+{% extends "base.html" %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lecturers:lecturer_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>
+{% endblock log %}
+
+{% block content %}
+    <h2>Grade Assignments</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student Number</th>
+                    <th>Name</th>
+                    <th>Assignment</th>
+                    <th>Course</th>
+                    <th>Score</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission, result in submission_results %}
+                <tr>
+                    <td>{{ submission.student.student_number }}</td>
+                    <td>{{ submission.student.user }}</td>
+                    <td>{{ submission.assignment.title }}</td>
+                    <td>{{ submission.assignment.course.name }}</td>
+
+                    {% if result %}
+                        <!-- If result exists, make input read-only and disable the submit button -->
+                        <td>
+                            <input type="number" name="score" value="{{ result.grade }}" readonly>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success" disabled>Submitted</button>
+                        </td>
+                    {% else %}
+                        <!-- If no result exists, show the input and enable the submit button -->
+                        <td>
+                            <input type="number" name="score" min="0" max="100" required>
+                        </td>
+                        <td>
+                            <input type="hidden" name="student_number" value="{{ submission.student.student_number }}">
+                            <input type="hidden" name="assignment_id" value="{{ submission.assignment.id }}">
+                            <button type="submit" class="btn btn-success">Submit Score</button>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No submissions available for grading.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

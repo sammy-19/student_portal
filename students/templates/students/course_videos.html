@@ -1,0 +1,71 @@
+{% load static %}
+{% load youtube_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.name }} - Video Tutorials</title>
+    <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/video.css' %}">
+</head>
+<body>
+    <header class="header">
+        <h1>Student Portal</h1>
+        <nav>
+            </nav>
+    </header>
+
+    <div class="container pseudo-line">
+        <aside class="sidebar">
+            <h2>Navigation</h2>
+            </aside>
+
+        <section class="contents">
+            <div class="course-container">
+                <div class="video-header">
+                  <h2>{{ course.name }} - Video Tutorials</h2>
+                  <div class="video-progress">
+                    <span id="video-count"></span>
+                    <div class="progress-circle" id="progress-circle">
+                      <span id="progress-percentage"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="video-container">
+                    </div>
+
+                <div class="course-navigation">
+                    <button id="prev-button" class="nav-button">Previous</button>
+                    <button id="next-button" class="nav-button">Next</button>
+                </div>
+                 <div class="course-navigation" style="text-align: left">
+                    <a href="{% url 'students:student_dashboard' %}" class="back-button">Back to Course Menu</a>
+                 </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Jasperstone College</p>
+    </footer>
+
+    <script src="{% static 'js/video.js' %}"></script>
+    <script>
+        // Pass video data from Django to JavaScript
+        const videos = [
+            {% for video in videos %}
+                {
+                    title: "{{ video.title|escapejs }}",
+                    url: {% if video.video_file %}"{{ video.video_file.url|escapejs }}"{% elif video.video_link %}"{{ video.video_link|youtube_embed_url }}"{% else %}null{% endif %},                    description: "{{ video.description|escapejs }}",
+                    completed: {% if video.completed %}true{% else %}false{% endif %},
+                    isVideoFile: {% if video.video_file %}true{% else %}false{% endif %} 
+                },
+            {% endfor %}
+        ];
+        // Initialize the video player
+        initVideoPlayer(videos);
+    </script>
+</body>
+</html>

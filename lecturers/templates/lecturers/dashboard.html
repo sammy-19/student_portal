@@ -1,0 +1,169 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Portal: Jasperstone College of Applied Sciences and Technology (JCAST)</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+</head>
+<body>
+    <header class="header">
+        <h1>Lecturer Portal: <small>Jasperstone College</small></h1>
+        <nav>
+            <div class="menu-button" id="menuButton" onclick="dropDown()">
+                <div class ="bar bar1"></div>
+                <div class ="bar bar2"></div>
+                <div class ="bar bar3"></div>
+            </div>
+            <script>
+                const menuButton = document.getElementById('menuButton');
+                menuButton.addEventListener('click', () => {
+                    menuButton.classList.toggle('open');
+                });
+            </script>
+            <div id="dpdown">
+                <h1>Student Portal</h1>
+                <ul>
+                    <li><a href="{% url 'lecturers:lecturer_dashboard' %}" class="nav-link">Dashboard</a></li>
+                    <li><a href="{% url 'lecturers:assign_courses' %}" class="nav-link">Courses</a></li>
+                    <li><a href="{% url 'lecturers:lecturer_logout' %}" class="nav-link">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+       
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Assignments</a></li>
+                <li><a id="view_courses" href="#">Courses</a></li>
+		        <li><a href="#">Class Materials</a></li>
+            </ul>
+        </aside>
+
+        <section id="page1" class="content">
+            <h2>Welcome, Lecturer {{ lecturer.user.first_name }} {{ lecturer.user.last_name }}</h2>
+            <div class="space">
+                <button class="btn btn-primary btn-pri"><a class="nav-link" style="color: white; text-decoration: none" href="{% url 'lecturers:assign_courses' %}">View Assigned Courses</a></button>
+                <button class="btn btn-secondary btn-sec">Check Notifications</button>
+            </div>
+            <h3>Your Course Materials</h3>
+            <ul style="list-style: none">
+                {% for material in course_materials %}
+                <li><strong>{{ material.title }}</strong> <br></li>
+                <li>{{ material.course }} | {{ material.programme }}</li>
+                    <img src="{% static 'images/pdf.png' %}" alt="PDF" width="32" height="32"><br><br>
+                <li><a href="{% url 'lecturers:delete_material' material.id %}" class="btn-danger btn" onclick="return confirm('Are you sure?');">Delete</a></li>
+                <hr>
+                {% empty %}
+                <li>No course materials available.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="page2" class="nav-content content">
+            <h1 title="View and create assignments">Assignments</h1>
+            <!-- Assignments Section -->
+            <div class="assignment-submission modern-form-container">
+                <h3>Assignments and Submissions</h3>
+                <nav>
+                    <ul>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lecturers:view_submissions' %}">Submissions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lecturers:create_assignment' %}">Create Assignment</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lecturers:grade_assignment' %}">Mark/Grade Assignments</a></li>
+                    </ul>
+                </nav>
+                <h2>Your Assignments</h2>
+                <ul>
+                    {% for assignment in assignments %}
+                        <li>
+                            <strong>{{ assignment.title }}</strong> - {{ assignment.description }} (Due: {{ assignment.due_date }})
+                            <br>
+                            <small>Course: {{ assignment.course.name }}</small><br><br><a href="{% url 'lecturers:delete_assignment' assignment.id %}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a><hr>
+                        </li>
+                    {% empty %}
+                        <li>No assignments created yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+        
+        <section id="page3" class="nav-content content">
+            <h2>Your Courses</h2>
+            <h4><a href="{% url 'lecturers:create_course' %}" class="btn btn-primary mb-3">Create New Course</a></h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.description }}</td>
+                        <td>
+                            <a href="{% url 'lecturers:edit_course' course.id %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'lecturers:delete_course' course.id %}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No courses available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        
+        <section id="page4" class="nav-content content">
+            <div class="class-container">
+                <article class="materials">
+                    <div>
+                        <a class="btn btn-primary mb-3" href="{% url 'lecturers:assign_courses' %}">Assign Course</a>
+                    </div>
+                    <h2>Course Materials</h2>
+        
+                    <div class="material-section modern-form-container">
+                        <h2>Upload Course Material</h2>
+                        <form method="POST" enctype="multipart/form-data" class="modern-form">
+                            {% csrf_token %}
+                            {{ form }}
+                            <button type="submit" class="btn modern-button">Upload Material</button>
+                        </form>
+                    </div>
+        
+                    <div class="material-section modern-form-container">
+                        <h3>Videos</h3>
+                        <div class="video-grid modern-form-container">
+                            <form method="POST" enctype="multipart/form-data" class="modern-form">
+                                {% csrf_token %}
+                                {{ video_form }}
+                                <input type="submit" value="Submit Video" class="btn modern-button">
+                            </form>
+                        </div>
+                    </div>
+
+                </article>
+            </div>
+        </section>
+        
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Jasperstone College</p>
+    </footer>
+
+    <script src="{% static 'js/my_scripts.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
+</body>
+</html>

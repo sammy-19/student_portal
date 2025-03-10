@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Upload Course Material</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="font-size: 14px !important" class="btn btn-success">Upload Material</button>
+    </form>
+    <a href="{% url 'lecturers:lecturer_dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+</div>
+{% endblock %}

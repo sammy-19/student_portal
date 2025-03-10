@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Registered Students</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student Number</th>
+                <th>Full Name</th>
+                <th>Programme of Study</th>
+                <th>Gender</th>
+                <th>Username</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.student_number }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.program_of_study }}</td>
+                <td>{{ student.gender }}</td>
+                <td>{{ student.name }}</td>  <!-- Username is the student's name -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No students registered yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-3">
+        <a href="{% url 'students:register_student' %}" class="btn btn-primary">Register Another Student</a>
+    </div>
+</div>
+{% endblock %}

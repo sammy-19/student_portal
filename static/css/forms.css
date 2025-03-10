@@ -1,0 +1,47 @@
+/* Modern Form Container */
+.modern-form-container {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form */
+.modern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Inputs and Buttons */
+.modern-form input[type="text"],
+.modern-form input[type="file"],
+.modern-form input[type="submit"],
+.modern-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    width: 100%;
+}
+
+/* Button Style */
+.modern-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modern-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .modern-form {
+        width: 100%;
+    }
+}

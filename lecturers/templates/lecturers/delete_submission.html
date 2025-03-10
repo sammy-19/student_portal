@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Confirm Deletion</h2>
+
+<p>Are you sure you want to delete "{{ submission.title }}" assignment?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete Submission</button>
+    <a href="{% url 'lecturers:view_submissions' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

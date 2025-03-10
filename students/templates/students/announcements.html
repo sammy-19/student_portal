@@ -1,0 +1,118 @@
+<!-- announcements.html -->
+{% extends 'base.html' %}
+
+{% block log %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'students:student_dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'students:std_logout' %}">Logout</a>
+        </li>
+    </ul>
+</div>
+{% endblock log %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="announcement-container"  style="background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto;">
+        <!-- Announcement Title -->
+        <h2 class="announcement-title text-center" style="font-weight: bold !important;
+        color: green !important;
+        margin-bottom: 20px !important;">Announcements</h2>
+
+        <!-- Announcement List -->
+        <div class="announcement-list">
+            {% for announcement in announcements %}
+                <div class="announcement-item" style="padding-bottom:15px">
+                    <h5 class="announcement-title">{{ announcement.title }}</h5>
+                    <p class="announcement-message">{{ announcement.message }}</p>
+                    <cite class="announcement-timestamp text-muted">Posted on: {{ announcement.created_at|date:"F j, Y, g:i a" }}</cite>
+                    <hr>
+                </div>
+            {% empty %}
+                <p class="no-announcements">No announcements available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+/* General container styling */
+.announcement-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Title styling */
+.announcement-title {
+    font-weight: bold;
+    color: green !important;
+    margin-bottom: 20px;
+}
+
+/* Announcement item styling */
+.announcement-item {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.announcement-message {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #007bff;
+}
+
+.announcement-timestamp {
+    font-size: 0.875rem;
+    margin-top: 10px;
+}
+
+/* No announcements message styling */
+.no-announcements {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #6c757d;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .announcement-title {
+        font-size: 1.5rem;
+    }
+
+    .announcement-message {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .announcement-title {
+        font-size: 1.25rem;
+    }
+
+    .announcement-message {
+        font-size: 1rem;
+    }
+
+    .announcement-item {
+        padding: 10px;
+    }
+}
+</style>
