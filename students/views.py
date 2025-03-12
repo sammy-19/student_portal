@@ -10,13 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
 import os
-
+import random # Import random for progress bar colors
 
 def download_course_material(request, material_id):
     try:
         course_material = CourseMaterial.objects.get(id=material_id)
         file_path = course_material.file.path
-        
+
         if os.path.exists(file_path):
             with open(file_path, 'rb') as file:
                 response = HttpResponse(file.read(), content_type='application/force-download')
@@ -25,10 +25,10 @@ def download_course_material(request, material_id):
                 return response
         else:
             raise Http404("File does not exist")
-    
+
     except CourseMaterial.DoesNotExist:
         raise Http404("Course material not found")
-    
+
 @login_required
 def course_videos(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
@@ -61,34 +61,59 @@ def student_dashboard(request):
         results = Result.objects.filter(student=student)
         announcements = Announcement.objects.filter(target_group__in=['students', 'both']).order_by('-created_at')
         current_year, current_semester = student.current_year_and_semester()
-        
+
         # Calculate overall progress
         total_assignments = results.count()
         total_grade = sum(result.grade for result in results)
         overall_progress = (total_grade / (total_assignments * 100)) * 100 if total_assignments > 0 else 0
-       
+        overall_progress = int(overall_progress) # Convert to integer for display
+
+        # Course Progress Data for Overview Section
+        course_progress_data = []
+        progress_bar_colors = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#607D8B"] # Example colors
+        color_index = 0
+
+        for course in assigned_courses:
+            course_results = results.filter(course=course)
+            course_total_assignments = course_results.count() # Count results as assignments within the course
+            course_total_grade = sum(res.grade for res in course_results)
+            course_overall_progress = (course_total_grade / (course_total_assignments * 100)) * 100 if course_total_assignments > 0 else 0
+            course_overall_progress = int(course_overall_progress) # Convert to integer
+
+            course_progress_data.append({
+                'image': course.image,
+                'course_name': course.name,
+                'progress': course_overall_progress,
+                'progress_color': progress_bar_colors[color_index % len(progress_bar_colors)], # Cycle through colors
+            })
+            color_index += 1
+
         # Check if the course has an assigned lecturer
         lecturer = None
-        
+
         # Exclude assignments that have been submitted
         submitted_assignments = Submission.objects.filter(student=student).values_list('assignment_id', flat=True)
         assignments = assignments.exclude(id__in=submitted_assignments)
-        
+
         if assignments.exists():
             first_assignment = assignments.first()  # Assuming the course has a lecturer
             lecturer = first_assignment.lecturer if first_assignment.lecturer else None
-        
+
         current_datetime = timezone.now()
         assignments = assignments.filter(due_date__gt=current_datetime)
-        
+
         # Annotate each material with a flag to indicate whether it's a video
-        
+
         for material in course_materials:
             if material.video_file:
                 material.is_video = material.video_file.name.endswith(('.mp4', '.avi', '.mov', '.mkv'))  # Add more extensions as needed
             else:
                 material.is_video = False
-            
+
+        # Tutorial Completion Progress (Dummy data for now, replace with actual logic)
+        for course in assigned_courses:
+            course.tutorial_progress = random.randint(0, 100) # Example: Random progress
+
         return render(request, 'students/student_dashboard.html', {
             'student': student,
             'programme': programme,
@@ -101,6 +126,7 @@ def student_dashboard(request):
             'current_datetime': current_datetime,
             'current_year': current_year,
             'current_semester': current_semester,
+            'course_progress_data': course_progress_data, # Pass course progress data
         })
     else:
         return redirect('login')
@@ -108,13 +134,13 @@ def student_dashboard(request):
 @login_required
 def submit_assignment(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
-    
+
         # Get the Student object associated with the logged-in user
     try:
         student = Student.objects.get(user=request.user)
     except Student.DoesNotExist:
         return redirect('students:student_dashboard')
-    
+
     if request.method == 'POST':
         form = AssignmentSubmissionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -141,10 +167,10 @@ def view_courses(request):
         'student': student,
         'assigned_courses': assigned_courses,
     }
-    
+
     return render(request, 'students/view_courses.html', context)
 
 def std_logout(request):
     logout(request)  # This will remove the user session and log them out
     messages.success(request, "Successfully logged out.")
-    return redirect('login')  # Redirect to lecturer login page
+    return redirect('login')

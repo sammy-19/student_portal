@@ -6,8 +6,6 @@ body {
     color: white;
 }
 
-
-
 header a {
     text-decoration: none;
     color: rgb(255, 247, 0) !important;
@@ -45,10 +43,19 @@ nav ul li {
     margin-left: 20px;
 }
 
-
 li.nav-item a.nav-link {
     color: rgb(0, 179, 255) !important;
     font-weight: bold;
+}
+
+.salutations {
+    display: flex;
+    justify-content: space-between;
+}
+
+.salutations p {
+    font-family: monospace;
+    font-size: smaller;
 }
 
 .container {
@@ -75,7 +82,15 @@ li.nav-item a.nav-link {
 
 .sidebar ul li {
     margin: 15px 0;
+    display: flex; /* Enable flexbox for icon and text alignment */
+    align-items: center; /* Vertically align icon and text */
 }
+
+.sidebar ul li span.material-symbols-outlined {
+    margin-right: 10px; /* Space between icon and text */
+    color: white; /* Icon color */
+}
+
 
 .sidebar ul li button {
     color: black;
@@ -91,16 +106,20 @@ li.nav-item a.nav-link {
 .sidebar a {
     color: white;
     text-decoration: none;
+    display: block; /* Make each link a block element to fill the li */
+    padding: 8px 12px; /* Add padding for better click area */
+    border-radius: 5px; /* Optional: rounded corners for links */
 }
 
 .sidebar ul li a.active {
     font-weight: bold;
     background-color: darkgreen;
     color: yellow;
-    padding: 5px;
-    border-radius: 5px;
 }
 
+.sidebar span {
+    display: block;
+}
 
 /* Main Content */
 .content {
@@ -124,6 +143,87 @@ li.nav-item a.nav-link {
     box-shadow: 3px 4px solid gray;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* Dashboard Header Content */
+.header-container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    padding: auto;
+    justify-content: space-around; /* Distribute space evenly */
+    
+}
+
+.header-content {
+    padding: 24px;
+    margin: 10px;
+    border-radius: 24px;
+    box-shadow: 1px 2px 2px rgba(14, 14, 15, 0.5), -2px -3px 2px rgba(14, 14, 15, 0.5);
+    background-color: #f4f4f4; /* Light background for header content */
+    color: #333; /* Dark text for readability */
+}
+
+.header-content h2 {
+    color: darkgreen; /* Header text color */
+    margin-top: 0; /* Remove top margin for headers */
+}
+
+.overview {
+    text-align: justify;
+    line-height: 12px;
+    color:rgb(71, 73, 71);
+    width: 70%;
+}
+
+.overview-info {
+    padding: 20px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 30%;
+    color: #434f57;
+}
+
+.profile .pic img {
+    width: 120px; /* Reduced profile image size */
+    height: 120px; /* Reduced profile image size */
+    border-radius: 50%; /* Make profile image circular */
+    border: 2px solid #000;
+    margin-bottom: 10px; /* Space below profile image */
+}
+
+button#viewAllCourses {
+    background-color: transparent;
+    color: darkgreen;
+    border: 1px solid darkgreen;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: none; /* Remove default button box-shadow if you don't want it */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button#viewAllCourses:hover {
+    background-color: darkgreen;
+    color: white;
+    box-shadow: none; /* Keep box-shadow none on hover if you removed it */
+}
+
+.profile-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 2em; /* Adjust size of profile icon */
+    color: white; /* Color of profile icon */
+    transition: color 0.3s ease;
+}
+
+.profile-icon:hover {
+    color: yellow; /* Change color on hover */
 }
 
 /* Buttons */
@@ -186,40 +286,61 @@ li.nav-item a.nav-link {
 /* Students Progress Bar*/
 /*Grades or results progress bar*/
 .progress-bar {
-    width: 100%;
-    background-color: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
+    height: 15px; /* Reduced height */
+    background-color: green;
+    border-radius: 7.5px; /* Adjusted border-radius for half height */
+    text-align: center; /* Center text inside */
+    line-height: 15px; /* Vertically center text */
+    color: white; /* Text color on progress bar */
+    font-size: 0.8em; /* Smaller font size for progress text */
+    overflow: hidden; /* Clip any overflowing content */
+    width: 0%; /* Initial width set to 0, will be updated dynamically */
 }
 
-.progress-bar-fill {
-    height: 20px;
-    background-color: green;
-    border-radius: 10px 0 0 10px;
+.progress-bar-container {
+    background-color: #ddd; /* Container background */
+    border-radius: 7.5px; /* Match progress bar radius */
+    width: 100%; /* Take full width of parent */
+    margin: 5px 0; /* Add some vertical margin */
+    position: relative; /* For positioning progress text */
 }
+
+.progress-text {
+    position: absolute; /* Position text over the bar */
+    left: 5px; /* Padding from left */
+    top: 0;
+    line-height: 15px; /* Vertically align text */
+    font-size: 0.8em; /* Smaller font size */
+    color: black; /* Text color */
+}
+
+.progress-bar-container.horizontal {
+    width: 80%; /* Adjust as needed */
+    margin: 10px auto; /* Center horizontally with margin */
+}
+
 
 .sub-container {
-    width: 90%;
+    width: 95%;
     display: flex;
     padding: 5px;
     overflow-x: auto;
+    justify-content: flex-start; /* Align items to the start */
 }
 
 .course-info {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
     min-width: 200px;
-    min-height: 150px;
-    margin: 5px 20px;
-    padding: 20px;
+    min-height: 220px; /* Increased height to accommodate image and progress bar */
+    margin: 10px; /* Increased margin for spacing */
+    padding: 15px; /* Reduced padding */
     box-shadow: 1px 2px 2px rgba(14, 14, 15, 0.5), -2px -3px 2px rgba(14, 14, 15, 0.5);
     border-radius: 16px;
-}
-
-.course-info h3 {
-    text-align: center;
-    padding-left: 10%;
+    text-align: center; /* Center text within course info */
+    background-color: #fff; /* White background for course info */
+    color: #333; /* Dark text color */
 }
 
 .course-info:hover {
@@ -229,6 +350,107 @@ li.nav-item a.nav-link {
 .course-info:active {
     box-shadow: 2px 3px 2px rgba(14, 14, 15, 0.5), -1px -2px 1px rgba(14, 14, 15, 0.5);
 }
+
+.course-image {
+    width: 80px; /* Adjust image size as needed */
+    height: 80px; /* Adjust image size as needed */
+    margin-bottom: 10px; /* Space between image and text */
+}
+
+.course-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10%;
+}
+
+
+.course-name {
+    margin: 10px 0 5px 0; /* Adjusted margins */
+    font-size: 1.1em; /* Slightly larger font size */
+    font-weight: bold;
+    position: relative; /* For bottom alignment */
+    bottom: 0; /* Align to bottom of course-info */
+    width: 100%; /* Full width to center text */
+}
+
+.tutorial-progress {
+    width: 100%; /* Full width for progress bar */
+    margin-top: 5px; /* Space between name and progress bar */
+    margin-bottom: 0; /* No bottom margin */
+    position: relative; /* To contain the progress bar within course-info */
+    bottom: 0; /* Align to bottom of course-info */
+}
+
+
+.course-progress-list {
+    list-style: none;
+    padding: 0;
+}
+
+.course-progress-list li {
+    margin-bottom: 15px;
+}
+
+.course-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.course-item:nth-child(even) {
+    background-color: #f9f9f9; /* Slightly different background for even items */
+}
+
+.course-icon {
+    margin-right: 15px;
+    width: 50px; /* Adjust icon size */
+    height: 50px; /* Adjust icon size */
+    border-radius: 50%; /* Make icons circular */
+    overflow: hidden; /* Ensure image stays within circle */
+}
+
+.course-icon img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove any extra bottom space */
+}
+
+.course-details {
+    flex-grow: 1; /* Allow details to take up remaining space */
+}
+
+.course-details h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+}
+
+.course-details .progress-bar-container {
+    margin: 0; /* Remove default margins from progress bar container */
+    width: 100%; /* Make progress bar full width in course details */
+}
+
+.course-details .progress-bar {
+    height: 10px; /* Slimmer progress bar in course list */
+    border-radius: 5px; /* Rounded corners for slimmer bar */
+    line-height: 10px; /* Adjust line height to match bar height */
+}
+
+.course-details .progress-text {
+    line-height: 10px; /* Align text vertically with slimmer bar */
+    font-size: 0.7em; /* Adjust font size for slimmer bar */
+}
+
+
+.calendar-overview {
+    width: 100%;
+    margin-top: 20px; /* Add margin to separate from other overview items */
+}
+
 
 #dpdown h1 {
     display: none;
@@ -251,7 +473,7 @@ footer {
         width: auto;
         padding: auto;
     }
-    
+
     .sidebar, .content {
         width: 100%;
         min-height: auto;
@@ -276,12 +498,46 @@ footer {
         flex-direction: column;
         overflow: hidden;
     }
+
+    .header-container {
+        flex-direction: column; /* Stack header content vertically on smaller screens */
+    }
+
+    .overview, .profile {
+        width: auto; /* Reset width to auto to fill container */
+        min-width: 0; /* Allow items to shrink as needed */
+        margin: 10px 30px 10px 10px; /* Reduce horizontal margin and add vertical margin */
+    }
+
+    .profile .pic img {
+        width: 100px; /* Adjust profile image size for tablet */
+        height: 100px; /* Adjust profile image size for tablet */
+    }
+
+    .course-progress, .over-progress, .calendar-overview {
+        width: 100%; /* Make overview items full width on smaller screens */
+    }
+
+    .sub-container {
+        flex-direction: row; /* Or column, based on desired mobile layout */
+        flex-wrap: wrap; /* Allow wrapping of course items */
+        justify-content: center; /* Center items in sub-container */
+    }
+
+    .course-info {
+        min-width: 180px; /* Adjust min-width for mobile course items */
+        margin: 10px; /* Adjust margin for mobile course items */
+    }
 }
 
 /* Mobile Phones */
 @media (max-width: 660px) {
     .header {
         padding: 10px;
+    }
+
+    #profileDiv {
+        display: none;
     }
 
     .header h1 {
@@ -347,7 +603,7 @@ footer {
         background-color: rgba(25, 26, 26, 0.4);
         backdrop-filter: blur(20px);
     }
-    
+
     #dpdown.show {
         display: block;
     }
@@ -362,7 +618,7 @@ footer {
     #dpdown li:hover {
         background-color: rgb(8, 56, 8);
     }
-    
+
     #dpdown a {
         color: white;
         text-decoration: none;
@@ -388,5 +644,25 @@ footer {
 
     footer {
         padding: 5px;
+    }
+
+    .course-progress-list li {
+        margin-bottom: 20px; /* Increased spacing for mobile */
+    }
+
+    .course-item {
+        flex-direction: column; /* Stack course item content vertically */
+        text-align: center; /* Center text in course item */
+    }
+
+    .course-icon {
+        margin-right: 0; /* Remove right margin on mobile */
+        margin-bottom: 10px; /* Add bottom margin for icon */
+    }
+
+    .course-details .progress-bar-container {
+        width: 90%; /* Adjust progress bar width for mobile */
+        margin-left: auto; /* Center the progress bar horizontally */
+        margin-right: auto;
     }
 }

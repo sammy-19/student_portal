@@ -8,9 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal: Jasperstone College of Applied Sciences and Technology</title>
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/video.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'css/circular_progress.css' %}"> <link rel="stylesheet" href="{% static 'css/calendar.css' %}"> </head>
 <body>
     <header class="header">
         <h1>Student Portal</h1>
@@ -32,7 +33,11 @@
                     <li><a href="{% url 'students:student_dashboard' %}" class="nav-link">Dashboard</a></li>
                     <li><a href="{% url 'students:announcement_view' %}" class="nav-link">Announcements</a></li>
                     <li><a href="{% url 'students:std_logout' %}" class="nav-link">Logout</a></li>
+                    <li class="profile-icon" id="profileIcon">
+                        <span class="material-icons md-36">account_circle</span>
+                    </li>
                 </ul>
+                
             </div>
         </nav>
     </header>
@@ -41,37 +46,134 @@
         <aside class="sidebar">
             <h2>Navigation</h2>
             <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Assignments</a></li>
-                <li><a href="#">Grades</a></li>
-		        <li><a href="#">Courses</a></li>
+                <li><a href="#" class="active"><span class="material-icons md-36">dashboard</span> Dashboard</a></li>
+                <li><a href="#"><span class="material-icons md-36">assignment</span> Assignments</a></li>
+                <li><a href="#"><span class="material-icons md-36">grade</span> Grades</a></li>
+                <li><a href="#"><span class="material-icons md-36">class</span> Courses</a></li>
             </ul>
         </aside>
 
         <section id="page1" class="content">
-            <div>
-                <h4 id="datetime"></h4>
+            <div class="salutations">
+                <h2>Welcome, {{ student.user.username}}</h2>
+                <p id="datetime"></p>
             </div>
-            <h2>Welcome, {{ student.user.username }}</h2>
-            <h2>{{ programme }} Programme Student</h2>
-            <h4><strong>Course Duration:</strong> <span style="color: darkgreen"> {{ student.duration_years }} years</span></h4>
-            <h4><strong>Current Year | Semester:</strong> <span style="color: darkgreen">Year {{ current_year }} </span> | <span style="color: darkgreen">Semester {{ current_semester }} </span></h4>
-            <!-- Displaying the lecturer -->
-                {% for assignment in assignments%}
-                    <p>Assigned Lecturer: {{ assignment.lecturer.first_name }} {{ assignment.lecturer.last_name }}</p>
-                {% endfor %}
-            <br>
-            <button class="btn btn-primary btn-pri"><a class="nav-link" style="color: white; text-decoration: none" href="{% url 'students:view_courses' %}">View Courses</a></button>
-            <button class="btn btn-secondary btn-sec">Check Notifications</button>
+            <div class='header-container'>
+                <div class="overview header-content">
+                    <div class='overview-info course-progress-container'>
+                        <div class='course-progress'>
+                            <h2>Course Progress</h2>
+                            <ul class="course-progress-list" id="courseListShort"> {# Short list - first 4 courses #}
+                                {% for course_progress in course_progress_data|slice:":4" %}
+                                <li>
+                                    <div class="course-item">
+                                        <div class="course-icon">
+                                            <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                        </div>
+                                        <div class="course-details">
+                                            <h3>{{ course_progress.course_name }}</h3>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar" style="background-color: {{ course_progress.progress_color }}; width: {{ course_progress.progress }}%;"></div>
+                                                <span class="progress-text">{{ course_progress.progress }}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="course-progress-list" id="courseListFull" style="display: none;"> {# Full list - hidden initially #}
+                                {% for course_progress in course_progress_data %}
+                                <li>
+                                    <div class="course-item">
+                                        <div class="course-icon">
+                                            <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                        </div>
+                                        <div class="course-details">
+                                            <h3>{{ course_progress.course_name }}</h3>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar" style="background-color: {{ course_progress.progress_color }}; width: {{ course_progress.progress }}%;"></div>
+                                                <span class="progress-text">{{ course_progress.progress }}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <button id="viewAllCourses" onclick="toggleCourseList()">View All</button> {# View All Button #}
+                        </div>
+                    </div>
+                    <div class='overview-info over-progress'>
+                        <h2>Overall Progress</h2>
+                        <div class="circular-progress">
+                            <div class="outer">
+                                <div class="inner">
+                                    <div id="number">{{ overall_progress }}%</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/3600/svg" version="1.1" width="360px" height="360px">
+                                <defs>
+                                    <linearGradient id="GradientColor">
+                                        <stop offset="0%" stop-color="#e91e63" />
+                                        <stop offset="100%" stop-color="#673ab7" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="80" cy="80" r="70" stroke-linecap="round" style="stroke-dashoffset: calc(440px - (440px * {{ overall_progress }}) / 100);" />
+                            </svg>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div id="profileDiv" class='profile header-content'>
+                    <div class='pic'><img src='{{ student.profile_picture.url }}' width="90" height="90" alt='{{ student.user.username }} Profile'></div>
+                    <div class='profile-details'>
+                    <div class='profile-details'>
+                        <h4>{{ student.user.username }}</h4>
+                        <h3>Programme</h3>
+                        <h4>{{ programme }}</h4>
+                        <h3>Duration</h3>
+                        <h4>{{ student.duration_years }} Years</h4>
+                        <h3>Start Date</h3>
+                        <h4>{{ student.intake_date }} Years</h4>
+                    </div>
+                    <div class='overview-info calendar-overview'>
+                        <h3>Monthly Calendar</h3>
+                        <div class="calendar">
+                            <div class="month">
+                                <div class="prev" onclick="moveDate('prev')">
+                                    &#10094;
+                                </div>
+                                <div class="date" >
+                                    <h1></h1>
+                                    <p></p>
+                                </div>
+                                <div class="next" onclick="moveDate('next')">
+                                    &#10095;
+                                </div>
+                            </div>
+                            <div class="weekdays">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div class="days">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="page2" class="content">
             <h1>Tasks & Assignment</h1>
-                <!-- Assignments Section -->
-            <article class="assignments">
+                <article class="assignments">
                 <h3>Assignments</h3>
                 <div class="assignment-list">
-                    <h4>Posted Assignments</h4>   
+                    <h4>Posted Assignments</h4>
                     <ul style="list-style: none">
                         {% for assignment in assignments %}
                             <li class="list-group-item">
@@ -122,17 +224,25 @@
             </div>
         </section>
 
-	    <section id="page4" class="content">
+        <section id="page4" class="content">
             <div class="class-container">
                 <article class="materials">
                     <h2>My Courses</h2>
-        
+
                     <div class="material-section">
                         <h3>{{ student.program_of_study.name }} Courses</h3>
                         <div class="sub-container">
                             {% for course in assigned_courses %}
                             <div class="course-info">
-                                <h3><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3>
+                                <div class="course-image">
+                                    <img src="{{ course.image.url }}" alt="{{ course.name }} Image">
+                                </div>
+                                <h3 class="course-name"><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3>
+                                <div class="tutorial-progress">
+                                    <div class="progress-bar-container horizontal">
+                                        <div class="progress-bar" style="width: {{ course.tutorial_progress }}%;"></div> <span class="progress-text">{{ course.tutorial_progress }}% Tutorials</span>
+                                    </div>
+                                </div>
                             </div>
                             {% empty %}
                             <div class="course-info">No courses assigned yet.</div>
@@ -145,12 +255,47 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2024 Jasperstone College</p>
+        <p>&copy; 2025 Jasperstone College</p>
     </footer>
 
     <script src="{% static 'js/my_scripts.js' %}"></script>
     <script src="{% static 'js/events.js' %}"></script>
     <script src="{% static 'js/time.js' %}"></script>
     <script src="{% static 'js/menu.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCalendar();
+        });
+    </script>
+    <script src="{% static 'js/circular_progress.js' %}"></script> <script>
+        setCircularProgress({{ overall_progress }}); // Initial call to set circular progress
+    </script>
+    <script>
+        function toggleCourseList() {
+            var shortList = document.getElementById('courseListShort');
+            var fullList = document.getElementById('courseListFull');
+            var viewAllButton = document.getElementById('viewAllCourses');
+
+            if (shortList.style.display !== 'none') {
+                shortList.style.display = 'none';
+                fullList.style.display = 'block';
+                viewAllButton.textContent = 'View Less';
+            } else {
+                shortList.style.display = 'block';
+                fullList.style.display = 'none';
+                viewAllButton.textContent = 'View All';
+            }
+        }
+
+        document.getElementById('profileIcon').addEventListener('click', function() {
+            var profileDiv = document.getElementById('profileDiv');
+            if (profileDiv.style.display === 'none') {
+                profileDiv.style.display = 'block';
+            } else {
+                profileDiv.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

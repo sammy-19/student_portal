@@ -1,0 +1,95 @@
+.calendar{
+    width: 100%;
+    height: fit-content;
+    background-color: #f4f4f4;
+    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.calendar .month{
+    width: 100%;
+    background-color: darkgreen;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 0 5px;
+}
+
+.calendar .month i{
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.calendar .month h1{
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    margin-bottom: 0.7rem;
+}
+
+.calendar .month p{
+    font-size: 0.6rem;
+}
+
+.calendar .weekdays{
+    width: 100%;
+    height: auto;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.calendar .weekdays div{
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+    width: calc(100% / 7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar .days{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar .days div{
+    font-size: 0.6rem;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar .days div span{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.calendar .days div:hover{
+    background-color: darkgreen;
+    color: #fff;
+}
+
+.calendar .days div.today{
+    background-color: darkgreen;
+    color: #fff;
+}
+
+.calendar .days div.prev-date, .calendar .days div.next-date{
+    opacity: 0.5;
+}
+
+.calendar .days div.today {
+    font-weight: 700;
+}

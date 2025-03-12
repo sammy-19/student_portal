@@ -11,10 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
 import os
-import django_heroku
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,15 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = os.environ.get("SECRET_KEY")
 SECRET_KEY = 'django-insecure-kukl2_j$gpyd$w21nr*g4b=mbb5#a(hk=loqifhkn2zu^n(kh('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 DEBUG = True
 
 #ALLOWED_HOSTS = []
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,7 +48,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,12 +61,9 @@ ROOT_URLCONF = 'student_portal.urls'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
-
-if DEBUG:
-  STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-else:
-  STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -104,23 +95,11 @@ WSGI_APPLICATION = 'student_portal.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://user:password@hostname:port/dbname'
-    )
-}
-
-"""
-DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-"""
-#database_url = os.environ.get("DATABASE_URL")
-#DATABASES['default'] = dj_database_url.parse("postgresql://student_portal_database_unjl_user:CCbqvtg6ou3w2qUImJVW2FT2vvqlNatP@dpg-crn97o68ii6s73emq8p0-a.oregon-postgres.render.com/student_portal_database_unjl")
-
-# postgresql://student_portal_database_unjl_user:CCbqvtg6ou3w2qUImJVW2FT2vvqlNatP@dpg-crn97o68ii6s73emq8p0-a.oregon-postgres.render.com/student_portal_database_unjl
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -166,7 +145,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Default Django login system
 LOGIN_REDIRECT_URL = '/students/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())

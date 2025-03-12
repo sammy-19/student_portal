@@ -1,0 +1,58 @@
+.circular-progress{
+    position: relative;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background: conic-gradient(#673ab7 3.6deg, #ededed 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress::before{
+    content: '';
+    position: absolute;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    background-color: #f4f4f4;
+}
+
+.circular-progress .outer{
+    position: relative;
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress .inner{
+    position: relative;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    background-color: darkgreen;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress .inner #number{
+    font-weight: 600;
+    color: #fff;
+}
+
+.circular-progress circle{
+    fill: none;
+    stroke: url(#GradientColor);
+    stroke-width: 20px;
+    stroke-dasharray: 440;
+    /* stroke-dashoffset: 440; */
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+/* colors for the circular progress bar*/
+/* :root{
+    --gradient: linear-gradient(to left top, #DD2476, #FF512F);
+} */

@@ -3,13 +3,13 @@ from django.contrib.auth.models import User
 from datetime import date
 
 # Create your models here.
-  
+
 class Programme(models.Model):
     name = models.CharField(max_length=255)
-    
+
     def __str__(self):
         return self.name
-    
+
 class StudentProfile(models.Model):
     student_number = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=30)
@@ -17,18 +17,20 @@ class StudentProfile(models.Model):
     duration_years = models.IntegerField()
     intake_date = models.DateField()
     gender = models.CharField(max_length=30, choices=(('Male', 'Male'), ('Female', 'Female')))
+    profile_picture = models.ImageField(upload_to='images/profiles/', default='images/profiles/profile.jpg', blank=True, null=True) # Added profile_picture
 
     def __str__(self):
         return self.name
-    
+
 class Course(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, default=1)
- 
+    image = models.ImageField(upload_to='images/course_images/', blank=True, null=True) # Added image field for Course
+
     def __str__(self):
         return self.name
-  
+
 class CourseMaterial(models.Model):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='course_materials/', null=True, blank=True)
@@ -46,10 +48,11 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_number = models.CharField(max_length=30, unique=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
-    intake_date = models.DateField(default=date(2024, 9, 2))  # Intake date for the course
-    duration_years = models.IntegerField(default="2")  # Duration of the course
-    assigned_courses = models.ManyToManyField(Course, related_name='students', blank=True)  # Many-to-Many relationship
+    intake_date = models.DateField(default=date(2024, 9, 2))   # Intake date for the course
+    duration_years = models.IntegerField(default="2")   # Duration of the course
+    assigned_courses = models.ManyToManyField(Course, related_name='students', blank=True)   # Many-to-Many relationship
     program_of_study = models.ForeignKey(Programme, on_delete=models.CASCADE, default=1)
+    profile_picture = models.ImageField(upload_to='images/student_profiles/', default='images/profiles/profile.jpg', blank=True, null=True) # Added profile_picture for Student
 
     def __str__(self):
         return self.user.username
@@ -84,7 +87,7 @@ class Assignment(models.Model):
     due_date = models.DateField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lecturer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_lecturer')
-    programme = models.CharField(max_length=100) 
+    programme = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
@@ -94,7 +97,7 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
     file = models.FileField(upload_to='submissions/')
     submitted_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return f'{self.student.username} - {self.assignment.title}'
 
@@ -103,4 +106,3 @@ class Result(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)  # Ensure this field is present
     grade = models.IntegerField()
-
