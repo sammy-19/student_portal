@@ -238,11 +238,11 @@
                                     <img src="{{ course.image.url }}" alt="{{ course.name }} Image">
                                 </div>
                                 <h3 class="course-name"><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3>
-                                <div class="tutorial-progress">
+                                <!--div class="tutorial-progress">
                                     <div class="progress-bar-container horizontal">
                                         <div class="progress-bar" style="width: {{ course.tutorial_progress }}%;"></div> <span class="progress-text">{{ course.tutorial_progress }}% Tutorials</span>
                                     </div>
-                                </div>
+                                </div-->
                             </div>
                             {% empty %}
                             <div class="course-info">No courses assigned yet.</div>

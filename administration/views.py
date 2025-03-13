@@ -20,7 +20,7 @@ def admin_login(request):
         
         if user is not None:
             try:
-                admin = Admin.objects.get(username=user)
+                admin = Admin.objects.get(username=username)
                 login(request, user)
                 messages.success(request, "Login successful. Welcome, Admin!")
                 return redirect('administration:admin_dashboard')
