@@ -27,16 +27,23 @@ function loadVideo(index) {
                 ${video.completed ? '<div class="completed">COMPLETE</div>' : ''}
             </div>
         `;
-    } else if (video.url) {  // Check for a valid URL (YouTube embed)
+    }
+    
+    else  if (video.url) { // Check for a valid URL (YouTube embed)
         videoHTML = `
             <div class="video-item">
                 <h3>${video.title}</h3>
-                <iframe width="560" height="315" src="${video.url}" title="${video.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <div class="video-responsive-wrapper">
+                    <iframe width="560" height="315" src="${video.url}" title="${video.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
                 <p>${video.description}</p>
                 ${video.completed ? '<div class="completed">COMPLETE</div>' : ''}
             </div>
         `;
-    } else {
+    }
+
+    
+    else {
         videoHTML = `<div class="video-item"><p>No video available.</p></div>`;
     }
 

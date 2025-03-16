@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import CourseMaterialForm, VideoUploadForm
+from .forms import VideoUploadForm
 from .models import Lecturer
 from django.http import HttpResponse
 
@@ -36,7 +36,7 @@ def lecturer_logout(request):
     messages.success(request, "Successfully logged out.")
     return redirect('lecturers:lecturer_login')  # Redirect to lecturer login page
 
-
+"""
 @login_required
 def upload_material(request):
     if request.method == 'POST':
@@ -48,6 +48,7 @@ def upload_material(request):
         form = CourseMaterialForm()
 
     return render(request, 'lecturers/dashboard.html', {'form': form})
+"""
 
 @login_required
 def upload_success(request):
@@ -65,18 +66,19 @@ def lecturer_dashboard(request):
     assignments = Assignment.objects.filter(course__in=lecturer.assigned_courses.all())
     
     if request.method == 'POST':
-        form = CourseMaterialForm(request.POST, request.FILES)
+       # form = CourseMaterialForm(request.POST, request.FILES)
         video_form = VideoUploadForm(request.POST, request.FILES)
         if video_form.is_valid():
             video_form.save()
             return redirect('lecturers:upload_success')
-        
+        """  
         if form.is_valid():
             form.save()
             return redirect('lecturers:upload_success')  # Redirect after successful upload
+        """
                 
     else:
-        form = CourseMaterialForm()
+       # form = CourseMaterialForm()
         video_form = VideoUploadForm()
         
     return render(request, 'lecturers/dashboard.html', {
@@ -84,7 +86,7 @@ def lecturer_dashboard(request):
         'courses': courses,
         'course_materials': course_materials,
         'assignments': assignments,
-        'form': form,
+        #'form': form,
         "video_form": video_form,
         })
     

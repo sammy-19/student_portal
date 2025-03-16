@@ -216,13 +216,15 @@ button#viewAllCourses:hover {
 
 .profile-icon {
     display: none;
+    position: absolute;
+    right: 15%;
     cursor: pointer;
     font-size: 2em; /* Adjust size of profile icon */
     color: white; /* Color of profile icon */
     transition: color 0.3s ease;
 }
 
-.profile-icon:hover {
+.profile-icon:active {
     color: yellow; /* Change color on hover */
 }
 
@@ -432,7 +434,7 @@ button#viewAllCourses:hover {
 .course-details .progress-bar-container {
     margin: 0; /* Remove default margins from progress bar container */
     width: 100%; /* Make progress bar full width in course details */
-}
+ }
 
 .course-details .progress-bar {
     height: 10px; /* Slimmer progress bar in course list */
@@ -447,7 +449,7 @@ button#viewAllCourses:hover {
 
 
 .calendar-overview {
-    width: 100%;
+    width: 85%;
     margin-top: 20px; /* Add margin to separate from other overview items */
 }
 
@@ -500,7 +502,7 @@ footer {
     }
 
     .header-container {
-        flex-direction: column; /* Stack header content vertically on smaller screens */
+        flex-direction: column-reverse; /* Stack header content vertically on smaller screens */
     }
 
     .overview, .profile {
@@ -514,7 +516,7 @@ footer {
         height: 100px; /* Adjust profile image size for tablet */
     }
 
-    .course-progress, .over-progress, .calendar-overview {
+    .course-progress, .over-progress {
         width: 100%; /* Make overview items full width on smaller screens */
     }
 
@@ -537,7 +539,11 @@ footer {
     }
 
     #profileDiv {
-        display: none;
+        display: inline-block;
+    }
+
+    .profile-icon {
+        display: inline-block;
     }
 
     .header h1 {

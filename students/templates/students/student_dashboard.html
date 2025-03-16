@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/video.css' %}">
-    <link rel="stylesheet" href="{% static 'css/circular_progress.css' %}"> <link rel="stylesheet" href="{% static 'css/calendar.css' %}"> </head>
+    <link rel="stylesheet" href="{% static 'css/circular_progress.css' %}"> <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+</head>
+
 <body>
     <header class="header">
         <h1>Student Portal</h1>
@@ -20,6 +22,9 @@
                 <div class ="bar bar1"></div>
                 <div class ="bar bar2"></div>
                 <div class ="bar bar3"></div>
+            </div>
+            <div class="profile-icon" id="profileIcon">
+                <span class="material-icons md-36">account_circle</span>
             </div>
             <script>
                 const menuButton = document.getElementById('menuButton');
@@ -33,11 +38,7 @@
                     <li><a href="{% url 'students:student_dashboard' %}" class="nav-link">Dashboard</a></li>
                     <li><a href="{% url 'students:announcement_view' %}" class="nav-link">Announcements</a></li>
                     <li><a href="{% url 'students:std_logout' %}" class="nav-link">Logout</a></li>
-                    <li class="profile-icon" id="profileIcon">
-                        <span class="material-icons md-36">account_circle</span>
-                    </li>
                 </ul>
-                
             </div>
         </nav>
     </header>
@@ -268,7 +269,8 @@
             renderCalendar();
         });
     </script>
-    <script src="{% static 'js/circular_progress.js' %}"></script> <script>
+    <script src="{% static 'js/circular_progress.js' %}"></script>
+    <script>
         setCircularProgress({{ overall_progress }}); // Initial call to set circular progress
     </script>
     <script>
@@ -292,7 +294,8 @@
             var profileDiv = document.getElementById('profileDiv');
             if (profileDiv.style.display === 'none') {
                 profileDiv.style.display = 'block';
-            } else {
+            }
+            else {
                 profileDiv.style.display = 'none';
             }
         });

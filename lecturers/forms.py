@@ -21,6 +21,7 @@ class RegisterLecturerForm(forms.ModelForm):
 
 # lecturers/forms.py
 
+"""
 class CourseMaterialForm(forms.ModelForm):
     class Meta:
         model = CourseMaterial
@@ -33,6 +34,7 @@ class CourseMaterialForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
+"""
 class VideoUploadForm(forms.ModelForm):
     class Meta:
         model = CourseMaterial  # Assuming you have a model for course materials

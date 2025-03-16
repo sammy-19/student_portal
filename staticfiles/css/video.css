@@ -91,6 +91,21 @@
     font-size: 0.9em; /* Slightly smaller font for description */
 }
 
+.video-responsive-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-responsive-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .course-navigation {
     text-align: center;
     margin-top: 10px;
@@ -132,7 +147,7 @@
 
 
 /* Media Query for very small screens (optional, adjust as needed) */
-@media (max-width: 480px) {
+@media (max-width: 660px) {
     .course-container {
         padding: 5px; /* Even smaller padding */
     }
@@ -150,5 +165,10 @@
     }
     #progress-percentage{
       font-size: 0.7em;
+    }
+
+    .video-container {
+        width: 100%;
+        overflow: auto;
     }
 }
