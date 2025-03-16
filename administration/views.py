@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from lecturers.models import Lecturer
@@ -16,30 +15,31 @@ def admin_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            try:
-                admin = Admin.objects.get(username=username)
-                login(request, user)
-                messages.success(request, "Login successful. Welcome, Admin!")
-                return redirect('administration:admin_dashboard')
-            except Admin.DoesNotExist:
-                messages.error(request, "You are not authorized as an Admin.")
-                return render(request, 'administration/login.html', {'messages.error': messages.error})
-        else:
-            messages.error(request, "Invalid credentials. Please try again.")
-            return render(request, 'administration/login.html', {'messages.error': messages.error})
-    
+
+        try:
+            admin = Admin.objects.get(username=username, password=password) # Check against Admin model
+            request.session['admin_id'] = admin.id
+            messages.success(request, "Login successful. Welcome, Admin!")
+            return redirect('administration:admin_dashboard')
+        except Admin.DoesNotExist:
+            messages.error(request, "Invalid admin credentials.")
+
+        # Corrected part: Pass the messages from the request context
+        return render(request, 'administration/login.html', {'messages': messages.get_messages(request)})
+
     return render(request, 'administration/login.html')
 
 def admin_logout(request):
-    logout(request)  # This will remove the user session and log them out
+    if 'admin_id' in request.session:
+        del request.session['admin_id']
     messages.success(request, "Successfully logged out.")
     return redirect('administration:admin_login')
 
-@login_required (login_url='/administration/login/?next=/administration/')
 def admin_dashboard(request):
+    if 'admin_id' not in request.session:
+        messages.error(request, "You must be logged in as admin to view this page.")
+        return redirect('administration:admin_login')
+    
     students = Student.objects.all().order_by('-id')[:3]  # Get all students
     lecturers = Lecturer.objects.all().order_by('-id')[:3]  # Get all lecturers
 
