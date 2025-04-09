@@ -7,6 +7,7 @@ class Lecturer(models.Model):
     assigned_courses = models.ManyToManyField(Course)
     programme = models.ManyToManyField(Programme)
     contact = models.CharField(max_length=20)
+    
 
     def __str__(self):
         return self.user.username

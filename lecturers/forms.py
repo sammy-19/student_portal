@@ -1,10 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Lecturer
-from students.models import CourseMaterial
+from students.models import CourseMaterial, Programme, Course
 
 class RegisterLecturerForm(forms.ModelForm):
-    programme = forms.CharField(max_length=100, required=True)
+    programme = forms.ModelMultipleChoiceField(
+        queryset=Programme.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'})
+    )
+    
     contact = forms.CharField(required=True)
     
     class Meta:
@@ -14,45 +17,77 @@ class RegisterLecturerForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = f"{self.cleaned_data['first_name']}_{self.cleaned_data['last_name']}".lower()
-        user.set_password(self.cleaned_data.get('student_number', 'defaultpassword'))  # Replace 'defaultpassword' with a secure default or leave it as is
+        user.set_password(self.cleaned_data.get('contact', 'password1234'))  # Replace 'defaultpassword' with a secure default or leave it as is
         if commit:
             user.save()
         return user
 
-# lecturers/forms.py
+class CombinedMaterialForm(forms.ModelForm):
+    # Define fields explicitly to ensure correct querysets are used initially
+    # These querysets now show ALL courses and programmes
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(),
+        required=True, # Kept required (likely matches model)
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    programme = forms.ModelChoiceField(
+        queryset=Programme.objects.all(),
+        required=True, # Kept required (likely matches model)
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
-"""
-class CourseMaterialForm(forms.ModelForm):
     class Meta:
         model = CourseMaterial
-        fields = ['title', 'file', 'course', 'programme', 'description']  # Form fields
+        fields = ['title', 'description', 'course', 'programme', 'file', 'video_link', 'video_file']
+        # Apply widgets for styling if needed
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'course': forms.Select(attrs={'class': 'form-control'}),
-            'programme': forms.Select(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'video_link': forms.URLInput(attrs={'class': 'form-control'}),
+            'video_file': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
-"""
-class VideoUploadForm(forms.ModelForm):
-    class Meta:
-        model = CourseMaterial  # Assuming you have a model for course materials
-        fields = ['title', 'course', 'programme', 'video_link', 'video_file']  # Include the relevant fields
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'course': forms.Select(attrs={'class': 'form-control'}),
-            'programme': forms.Select(attrs={'class': 'form-control'}),
-            'video_link': forms.TextInput(attrs={'class': 'form-control'}),
-            'video_file': forms.ClearableFileInput(attrs={'accept': 'video/*'}),
-        }
+    def __init__(self, *args, **kwargs):
+        # --- REMOVED lecturer filtering ---
+        # No need to pop 'user' anymore if it's not used for filtering
+        # lecturer_user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        # Filtering logic based on lecturer_user is removed.
+        # The querysets defined directly on the fields (Course.objects.all(), etc.) will be used.
+
+        # Ensure material types and description remain optional
+        self.fields['file'].required = False
+        self.fields['video_link'].required = False
+        self.fields['video_file'].required = False
+        self.fields['description'].required = False
+
+        # NOTE: title, course, programme remain required=True here.
+        # To make them optional, modify the CourseMaterial model first
+        # (add null=True, blank=True) and run migrations. Then set required=False here.
+
+
+    def clean(self):
+        # Keep the validation that ensures one, and only one, material type is chosen
+        cleaned_data = super().clean()
+        file = cleaned_data.get('file')
+        video_link = cleaned_data.get('video_link')
+        video_file = cleaned_data.get('video_file')
+
+        provided_materials = sum(2 for item in [file, video_link, video_file] if item)
+
+        if provided_materials == 0:
+            raise forms.ValidationError(
+                "Please provide one type of material: upload a file OR provide a video link OR upload a video file.",
+                code='no_material'
+            )
+        elif provided_materials > 2:
+            error_msg = "Please provide at least TWO types of material (file, video link, or video file)."
+            # Add errors to the specific fields causing the conflict
+            if file: self.add_error('file', error_msg)
+            if video_link: self.add_error('video_link', error_msg)
+            if video_file: self.add_error('video_file', error_msg)
+
+        return cleaned_data
     
-    # Custom validation to restrict file types
-    def clean_video(self):
-        video = self.cleaned_data.get('video', False)
-        if video:
-            if not video.content_type.startswith('video'):
-                raise forms.ValidationError('File type is not supported. Please upload a video.')
-            if video.size > 500 * 1024 * 1024:  # 500 MB limit
-                raise forms.ValidationError("Video file too large ( > 500 MB )")
-        return video

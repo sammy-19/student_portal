@@ -97,17 +97,18 @@ def register_lecturers(request):
         if form.is_valid():
             # Create the new user (lecturer)
             user = form.save(commit=False)
-            user.set_password('password')  # You should set a secure password or generate one
+            user.set_password('password1234')  # You should set a secure password or generate one
             user.save()
             
             # Create the lecturer profile
-            programme = form.cleaned_data['programme']
             contact = form.cleaned_data['contact']
-            Lecturer.objects.create(
+            lecturer_profile = Lecturer.objects.create(
                 user=user,
-                programme=programme,
                 contact=contact
             )
+            selected_programmes = form.cleaned_data['programme'] 
+            lecturer_profile.programme.set(selected_programmes)
+            messages.success(request, f"Lecturer '{user.username}' registered successfully.")
             
             return redirect('administration:list_lecturers')
     else:

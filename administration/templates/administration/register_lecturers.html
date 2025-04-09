@@ -18,31 +18,7 @@
 
 <form method="POST">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="first_name">First Name</label>
-        <input type="text" class="form-control" name="first_name" required>
-    </div>
-
-    <div class="form-group">
-        <label for="last_name">Last Name</label>
-        <input type="text" class="form-control" name="last_name" required>
-    </div>
-
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" name="email" required>
-    </div>
-
-    <div class="form-group">
-        <label for="programme">Programme</label>
-        <input type="text" class="form-control" name="programme" required>
-    </div>
-
-    <div class="form-group">
-        <label for="contact">Contact</label>
-        <input type="text" class="form-control" name="contact" required>
-    </div>
-
+    {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Register Lecturer</button>
 </form>
 

@@ -530,6 +530,36 @@ footer {
         min-width: 180px; /* Adjust min-width for mobile course items */
         margin: 10px; /* Adjust margin for mobile course items */
     }
+
+    .sub-nav .btn {
+        display: block;
+        width: 90%;
+        margin-bottom: 10px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .sub-nav .btn:last-child {
+        margin-bottom: 0;
+    }
+     .sub-nav {
+         border-bottom: none;
+         padding-bottom: 0;
+     }
+
+       /* --- NEW: Rules for buttons inside .space container --- */
+    .space .btn { /* Target buttons inside the div with class="space" */
+        display: block;       /* Stack the buttons */
+        width: 90%;          /* Make them full-width */
+        margin-bottom: 10px;  /* Add space below each */
+        text-align: center;   /* Center text (optional) */
+        box-sizing: border-box; /* Include padding/border in width */
+    }
+
+    /* Remove margin from the last button within .space */
+    .space .btn:last-child {
+        margin-bottom: 0;
+
+    }
 }
 
 /* Mobile Phones */
@@ -672,3 +702,4 @@ footer {
         margin-right: auto;
     }
 }
+

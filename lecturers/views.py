@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import VideoUploadForm
+from .forms import CombinedMaterialForm
 from .models import Lecturer
 from django.http import HttpResponse
 
@@ -36,59 +36,47 @@ def lecturer_logout(request):
     messages.success(request, "Successfully logged out.")
     return redirect('lecturers:lecturer_login')  # Redirect to lecturer login page
 
-"""
-@login_required
-def upload_material(request):
-    if request.method == 'POST':
-        form = CourseMaterialForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('lecturers:upload_success')  # Redirect after successful upload
-    else:
-        form = CourseMaterialForm()
-
-    return render(request, 'lecturers/dashboard.html', {'form': form})
-"""
-
+# --- Upload Success View (Optional) ---
 @login_required
 def upload_success(request):
+    # You might not need this view if you show messages directly on the dashboard
     return render(request, 'lecturers/upload_success.html')
 
-@login_required (login_url='/lecturers/login/?next=/lecturers/')
+
+# --- CLEANED UP Dashboard View (Handles GET only) ---
+@login_required(login_url='/lecturers/login/') # Set login URL correctly
 def lecturer_dashboard(request):
     try:
-        lecturer = Lecturer.objects.get(user=request.user)  # Check if the user is a lecturer
+        lecturer = Lecturer.objects.get(user=request.user)
     except Lecturer.DoesNotExist:
-        return HttpResponse("Access denied. Only lecturers are allowed.")
-    lecturer = get_object_or_404(Lecturer, user=request.user)
-    courses = lecturer.assigned_courses.all()
-    course_materials = CourseMaterial.objects.filter(course__in=courses)
-    assignments = Assignment.objects.filter(course__in=lecturer.assigned_courses.all())
-    
+        messages.error(request, "Access denied. Only lecturers are allowed.")
+        return redirect('lecturers:lecturer_login')
+
+    material_form = CombinedMaterialForm() # For GET request
+
     if request.method == 'POST':
-       # form = CourseMaterialForm(request.POST, request.FILES)
-        video_form = VideoUploadForm(request.POST, request.FILES)
-        if video_form.is_valid():
-            video_form.save()
-            return redirect('lecturers:upload_success')
-        """  
-        if form.is_valid():
-            form.save()
-            return redirect('lecturers:upload_success')  # Redirect after successful upload
-        """
-                
-    else:
-       # form = CourseMaterialForm()
-        video_form = VideoUploadForm()
-        
-    return render(request, 'lecturers/dashboard.html', {
+        material_form = CombinedMaterialForm(request.POST, request.FILES)
+        if material_form.is_valid():
+            material_form.save()
+            messages.success(request, "Course material added successfully!")
+            return redirect('lecturers:lecturer_dashboard')
+        else:
+            messages.error(request, "Failed to add material. Please check the form errors below.")
+            # Fall through to render with the invalid form
+
+    # Fetch other context data
+    courses = lecturer.assigned_courses.all()
+    course_materials = CourseMaterial.objects.filter(course__in=courses).order_by('-uploaded_at')
+    assignments = Assignment.objects.filter(lecturer=request.user).order_by('-due_date')
+
+    context = {
         'lecturer': lecturer,
         'courses': courses,
         'course_materials': course_materials,
         'assignments': assignments,
-        #'form': form,
-        "video_form": video_form,
-        })
+        'material_form': material_form, # Pass the single form
+    }
+    return render(request, 'lecturers/dashboard.html', context)
     
 # Create a new assignment
 @login_required
@@ -159,27 +147,56 @@ def edit_course(request, course_id):
 @login_required
 def assign_courses(request):
     programmes = Programme.objects.all()
-    courses = Course.objects.all()
+    courses = Course.objects.all() # You might want to filter this list
 
     if request.method == 'POST':
         programme_id = request.POST.get('programme')
-        course_ids = request.POST.getlist('courses')
+        course_ids = request.POST.getlist('courses') # List of course IDs to assign TO the programme
+
+        # Basic validation
+        if not programme_id or not course_ids:
+            messages.error(request, "Please select a programme and at least one course.")
+            # It's better to re-render the form with an error than just redirecting immediately
+            context = {'programmes': programmes, 'courses': courses, 'error': 'Selection missing.'}
+            return render(request, 'lecturers/assign_courses.html', context)
 
         programme = get_object_or_404(Programme, id=programme_id)
         selected_courses = Course.objects.filter(id__in=course_ids)
 
-        # Assign selected courses to the programme
+        # --- CORRECT LOGIC for ManyToManyField ---
+        # For each course selected, add the chosen programme to its 'programmes' list.
+        courses_updated_count = 0
         for course in selected_courses:
-            course.programme = programme
-            course.save()
+            # .add() handles duplicates; it won't add if the relationship already exists.
+            course.programmes.add(programme)
+            courses_updated_count += 1
+            # No need to call course.save() when using .add()/.remove()/.set() for ManyToMany
 
-        # Automatically assign these courses to all students in the programme
+        if courses_updated_count > 0:
+            messages.success(request, f"{courses_updated_count} course(s) successfully assigned to programme '{programme.name}'.")
+        else:
+             messages.warning(request, "No courses were assigned (check selection).")
+
+
+        # --- Student Assignment Logic (Review Carefully) ---
+        # This part assigns the selected courses to *all* students currently in the programme.
+        # Decide if you want to REPLACE (.set()) or ADD TO (.add()) the students' course lists.
+        # Using .add() is generally safer if students might have other courses.
         students_in_programme = Student.objects.filter(program_of_study=programme)
-        for student in students_in_programme:
-            student.assigned_courses.set(selected_courses)
-        
-        return redirect('lecturers:assign_courses')
+        if students_in_programme.exists():
+             for student in students_in_programme:
+                 # Option: Add these courses without removing others
+                 student.assigned_courses.add(*selected_courses)
 
+                 # Option: Replace student's courses entirely (original logic was like this)
+                 # student.assigned_courses.set(selected_courses)
+
+             messages.info(request, f"Selected courses also added to {students_in_programme.count()} student(s) in the programme.")
+        # --- End Student Assignment Logic ---
+
+        return redirect('lecturers:assign_courses') # Redirect back to the assignment page
+
+    # GET request
     context = {
         'programmes': programmes,
         'courses': courses,

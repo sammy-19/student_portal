@@ -19,7 +19,7 @@ urlpatterns = [
     path('courses/<int:course_id>/edit/', views.edit_course, name='edit_course'),
     path('courses/<int:course_id>/delete/', views.delete_course, name='delete_course'),
     
-    # Upload course material URL
+    # Upload course material URL    
     path('upload_success/', views.upload_success, name='upload_success'),
     path('assign-courses/', views.assign_courses, name='assign_courses'),  # For lecturers to assign courses
     

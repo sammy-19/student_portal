@@ -69,13 +69,21 @@
                                 <li>
                                     <div class="course-item">
                                         <div class="course-icon">
-                                            <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                            {# Check if the image field has a file associated with it #}
+                                            {% if course_progress.image and course_progress.image.url %}
+                                                <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                            {% else %}
+                                                {# Provide a fallback image if no image exists #}
+                                                {# Make sure this path '/static/images/default_course_icon.png' is correct #}
+                                                {# You might need to create a default icon image in your static files #}
+                                                <img src="/static/images/default_course_icon.png" alt="Default Course Icon">
+                                            {% endif %}
                                         </div>
                                         <div class="course-details">
                                             <h3>{{ course_progress.course_name }}</h3>
                                             <div class="progress-bar-container">
+                                                 {# Ensure closing div tag is correct here if it was cut off in the screenshot #}
                                                 <div class="progress-bar" style="background-color: {{ course_progress.progress_color }}; width: {{ course_progress.progress }}%;"></div>
-                                                <span class="progress-text">{{ course_progress.progress }}%</span>
                                             </div>
                                         </div>
                                     </div>
@@ -87,13 +95,21 @@
                                 <li>
                                     <div class="course-item">
                                         <div class="course-icon">
-                                            <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                            {# Check if the image field has a file associated with it #}
+                                            {% if course_progress.image and course_progress.image.url %}
+                                                <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
+                                            {% else %}
+                                                {# Provide a fallback image if no image exists #}
+                                                {# Make sure this path '/static/images/default_course_icon.png' is correct #}
+                                                {# You might need to create a default icon image in your static files #}
+                                                <img src="/static/images/default_course_icon.png" alt="Default Course Icon">
+                                            {% endif %}
                                         </div>
                                         <div class="course-details">
                                             <h3>{{ course_progress.course_name }}</h3>
                                             <div class="progress-bar-container">
+                                                 {# Ensure closing div tag is correct here if it was cut off in the screenshot #}
                                                 <div class="progress-bar" style="background-color: {{ course_progress.progress_color }}; width: {{ course_progress.progress }}%;"></div>
-                                                <span class="progress-text">{{ course_progress.progress }}%</span>
                                             </div>
                                         </div>
                                     </div>
@@ -133,8 +149,8 @@
                         <h4>{{ programme }}</h4>
                         <h3>Duration</h3>
                         <h4>{{ student.duration_years }} Years</h4>
-                        <h3>Start Date</h3>
-                        <h4>{{ student.intake_date }} Years</h4>
+                        {#<h3>Start Date</h3>#}
+                        {#<h4>{{ student.intake_date }} Years</h4>#}
                     </div>
                     <div class='overview-info calendar-overview'>
                         <h3>Monthly Calendar</h3>
@@ -236,15 +252,25 @@
                             {% for course in assigned_courses %}
                             <div class="course-info">
                                 <div class="course-image">
-                                    <img src="{{ course.image.url }}" alt="{{ course.name }} Image">
+                                    {# Check if the course image exists before accessing its URL #}
+                                    {% if course.image and course.image.url %}
+                                        <img src="{{ course.image.url }}" alt="{{ course.name }} Image">
+                                    {% else %}
+                                        {# Display the same fallback image #}
+                                        <img src="/static/images/default_course_icon.png" alt="Default Course Image">
+                                    {% endif %}
                                 </div>
-                                <h3 class="course-name"><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3>
-                                <!--div class="tutorial-progress">
-                                    <div class="progress-bar-container horizontal">
-                                        <div class="progress-bar" style="width: {{ course.tutorial_progress }}%;"></div> <span class="progress-text">{{ course.tutorial_progress }}% Tutorials</span>
-                                    </div>
+                                <h3 class="course-name"><a href="{% url 'students:course_videos' course.id %}">{{ course.name }}</a></h3> {# Corrected URL tag syntax #}
+                            
+                                {# Tutorial Progress Section - Check if tutorial_progress attribute exists #}
+                                {% if course.tutorial_progress is not None %}
+                                <!--div class="progress-bar-container horizontal">
+                                    {# Corrected style syntax and added closing span tag #}
+                                    <div class="progress-bar" style="width: {{ course.tutorial_progress }}%;"></div><span class="progress-text">{{ course.tutorial_progress }}%</span>
                                 </div-->
-                            </div>
+                                {% endif %}
+                            
+                            </div> {# Closing course-info div #}
                             {% empty %}
                             <div class="course-info">No courses assigned yet.</div>
                             {% endfor %}
