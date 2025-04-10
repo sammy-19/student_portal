@@ -73,9 +73,6 @@
                                             {% if course_progress.image and course_progress.image.url %}
                                                 <img src="{{ course_progress.image.url }}" alt="{{ course_progress.course_name }} Icon">
                                             {% else %}
-                                                {# Provide a fallback image if no image exists #}
-                                                {# Make sure this path '/static/images/default_course_icon.png' is correct #}
-                                                {# You might need to create a default icon image in your static files #}
                                                 <img src="/static/images/default_course_icon.png" alt="Default Course Icon">
                                             {% endif %}
                                         </div>
