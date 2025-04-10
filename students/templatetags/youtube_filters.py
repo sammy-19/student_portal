@@ -1,6 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 import re
+import os
 
 register = template.Library()
 
@@ -17,3 +18,12 @@ def youtube_embed_url(value):
         embed_url = f"https://www.youtube.com/embed/{video_id}"
         return mark_safe(embed_url)  # Mark as safe HTML
     return ''  # Return empty string if no match
+
+@register.filter
+def filename_only(value):
+    """
+    Returns the base name of a file path (from a FileField).
+    """
+    if hasattr(value, 'name'):
+        return os.path.basename(value.name)
+    return value # Return original value if it's not a file field or has no name

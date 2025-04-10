@@ -1,18 +1,16 @@
 {% load static %}
 {% load youtube_filters %}
-{% load student_extras %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ course.name }} - Materials</title> {# Changed title #}
+    <title>{{ course.name }} - Video Tutorials</title>
     <link rel="stylesheet" href="{% static 'css/my_styles.css' %}">
-    {# Keep video.css if it contains useful styles for video player/iframe #}
     <link rel="stylesheet" href="{% static 'css/video.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
-        /* Add some basic styling for material items */
         .material-item {
             border: 1px solid #ddd;
             padding: 15px;
@@ -27,23 +25,7 @@
         .material-actions a {
             margin-right: 10px;
             text-decoration: none;
-        }
-        .video-responsive-wrapper { /* Keep if using iframes */
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            background: #000;
-            margin-bottom: 10px;
-        }
-        .video-responsive-wrapper iframe,
-        .video-responsive-wrapper video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+
         }
         .download-link {
              display: inline-block;
@@ -62,98 +44,75 @@
 <body>
     <header class="header">
         <h1>Student Portal</h1>
-        {# Basic Nav - Add links back if needed #}
         <nav>
-             <a href="{% url 'students:student_dashboard' %}" style="color: white; margin-right: 15px;">Dashboard</a>
-             {# Maybe link back to course list? #}
-        </nav>
+            </nav>
     </header>
 
-    <div class="container">
-        {# Sidebar might be empty here, consider adding links or removing #}
+    <div class="container pseudo-line">
         <aside class="sidebar">
             <h2>Navigation</h2>
-            <ul>
-                 <li><a href="{% url 'students:student_dashboard' %}">Dashboard</a></li>
-                 {# Add other relevant links #}
-            </ul>
-        </aside>
+            </aside>
 
-        {# Changed class from 'contents' to 'content' to match styling? Verify your CSS #}
-        <section class="content">
-            <h2>{{ course.name }} - Course Materials</h2>
-
-            {% if course_materials %}
-                {% for material in course_materials %}
-                <div class="material-item">
-                    <h3>{{ material.title }}</h3>
-                    {% if material.description %}
-                        <p>{{ material.description }}</p>
-                    {% endif %}
-
-                    <div class="material-content">
-                        {# Case 1: Uploaded Video File #}
-                        {% if material.video_file and material.video_file.url %}
-                            <div class="video-responsive-wrapper">
-                                <video controls width="100%">
-                                    <source src="{{ material.video_file.url }}" type="video/mp4"> {# Adjust type if needed #}
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <div class="material-actions">
-                                {# Add download attribute to hint browser #}
-                                <a href="{{ material.video_file.url }}" class="download-link" download>Download Video File</a>
-                            </div>
-
-                        {# Case 2: YouTube Link #}
-                        {% elif material.video_link %}
-                            {% with embed_url=material.video_link|youtube_embed_url %}
-                                {% if embed_url %}
-                                <div class="video-responsive-wrapper">
-                                     <iframe width="560" height="315" src="{{ embed_url }}" title="{{ material.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                </div>
-                                {% else %}
-                                    <p>Invalid YouTube link format.</p>
-                                {% endif %}
-                            {% endwith %}
-                             <div class="material-actions">
-                                 {# Link to the original YouTube page, NO direct download #}
-                                <a href="{{ material.video_link }}" target="_blank" rel="noopener noreferrer" class="download-link">Watch on YouTube</a>
-                             </div>
-
-                        {# Case 3: Other Uploaded File #}
-                        {% elif material.file and material.file.url %}
-                            <div class="material-actions">
-                                {# Provide download link, use download attribute #}
-                                <a href="{{ material.file.url }}" class="download-link" download>Download File ({{ material.file.name|filename_only }})</a> {# Custom filter needed for filename_only #}
-                                {# Or just: <a href="{{ material.file.url }}" class="download-link" download>Download File</a> #}
-                            </div>
-
-                        {# Case 4: No valid content #}
-                        {% else %}
-                            <p><em>No viewable/downloadable content available for this item.</em></p>
-                        {% endif %}
+        <section class="contents">
+            <div class="course-container">
+                <div class="video-header">
+                  <h2>{{ course.name }} - Video Tutorials</h2>
+                  <div class="video-progress">
+                    <span id="video-count"></span>
+                    <div class="progress-circle" id="progress-circle">
+                      <span id="progress-percentage"></span>
                     </div>
+                  </div>
                 </div>
+
+                <div id="video-container"></div>
+                {% for material in course_materials%}
+                    {# Case 3: Other Uploaded File #}
+                    {% if material.file and material.file.url %}
+                    <div class="material-actions">
+                        {# Provide download link, use download attribute #}
+                        <a href="{{ material.file.url }}" class="download-link" download><i class="material-icons">download</i>Download {{ material.title  }} Lecture Notes</a>
+                        {# Or just: <a href="{{ material.file.url }}" class="download-link" download>Download File</a> #}
+                    </div>
+
+                    {# Case 4: No valid content #}
+                    {% else %}
+                        <p><em></em></p>
+                    {% endif %}
+                {% empty %}
+                    <p>No Materials yet</p>
                 {% endfor %}
-            {% else %}
-                <p>No materials uploaded for this course yet.</p>
-            {% endif %}
 
-            <div style="margin-top: 20px;">
-                <a href="{% url 'students:student_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a> {# Use button styles #}
+                <div class="course-navigation">
+                    <button id="prev-button" class="nav-button">Previous</button>
+                    <button id="next-button" class="nav-button">Next</button>
+                </div>
+                 <div class="course-navigation" style="text-align: left">
+                    <a href="{% url 'students:student_dashboard' %}" class="back-button">Back to Course Menu</a>
+                 </div>
             </div>
-        </section> {# End content #}
-
-    </div> {# End container #}
+        </section>
+    </div>
 
     <footer class="footer">
-        <p>&copy; {% now "Y" %} Jasperstone College</p> {# Updated year #}
+        <p>&copy; 2024 Jasperstone College</p>
     </footer>
 
-    {# Removed script tags related to video.js and the videos array #}
-    {# <script src="{% static 'js/video.js' %}"></script> #}
-    {# <script> ... const videos = [...] ... </script> #}
-
+    <script src="{% static 'js/video.js' %}"></script>
+    <script>
+        // Pass video data from Django to JavaScript
+        const videos = [
+            {% for video in videos %}
+                {
+                    title: "{{ video.title|escapejs }}",
+                    url: {% if video.video_file %}"{{ video.video_file.url|escapejs }}"{% elif video.video_link %}"{{ video.video_link|youtube_embed_url }}"{% else %}null{% endif %},                    description: "{{ video.description|escapejs }}",
+                    completed: {% if video.completed %}true{% else %}false{% endif %},
+                    isVideoFile: {% if video.video_file %}true{% else %}false{% endif %} 
+                },
+            {% endfor %}
+        ];
+        // Initialize the video player
+        initVideoPlayer(videos);
+    </script>
 </body>
 </html>
