@@ -51,27 +51,24 @@ def download_course_material(request, material_id):
 @login_required
 def course_videos(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    # Ensure the logged-in student is actually enrolled in a programme that offers this course
-    # (Optional but good practice)
     student = get_object_or_404(Student, user=request.user)
+
+    # Authorization check (optional but good)
     if not course.programmes.filter(id=student.program_of_study.id).exists():
-         messages.error(request, "You are not enrolled in a programme offering this course.")
-         return redirect('students:student_dashboard') # Or to 'view_courses'
+        messages.error(request, "You are not enrolled in a programme offering this course.")
+        return redirect('students:student_dashboard')
 
-    course_materials = CourseMaterial.objects.filter(course=course)
+    # Get ALL materials for the course, order as desired
+    course_materials = CourseMaterial.objects.filter(course=course).order_by('title') # Or by uploaded_at
 
-    # Filter for videos only (using file extension is brittle, checking fields is better)
-    videos = [
-        material for material in course_materials
-        if material.video_file or material.video_link
-    ]
+    # No need to pre-filter only videos here
+    # No need for dummy 'completed' status here unless you implement tracking
 
-    # Add completed status - Note: This status is temporary for this request only.
-    # For persistence, you'd need a separate model (e.g., VideoProgress) linking Student, CourseMaterial, and completion status.
-    for video in videos:
-        video.completed = False # Dummy value for now
-
-    return render(request, 'students/course_videos.html', {'course': course, 'videos': videos})
+    context = {
+        'course': course,
+        'course_materials': course_materials, # Pass the full queryset
+    }
+    return render(request, 'students/course_videos.html', context)
 
 
 @login_required

@@ -2,7 +2,7 @@ from students.models import *
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import CombinedMaterialForm
 from .models import Lecturer
@@ -89,7 +89,7 @@ def create_assignment(request):
         due_date = request.POST.get('due_date')
         course_id = request.POST.get('course')
         course = Course.objects.get(id=course_id)
-        programme = request.POST.get('programme')
+        #programme = request.POST.get('programme')
         
         # Include the lecturer's programme when creating an assignment
         Assignment.objects.create(
@@ -98,11 +98,11 @@ def create_assignment(request):
             due_date=due_date,
             course=course,
             lecturer=request.user,
-            programme=programme  # Save the programme
+           # programme=programme   Save the programme
         )
         return redirect('lecturers:lecturer_dashboard')
     
-    courses = lecturer.assigned_courses.all()  # Only show courses assigned to this lecturer
+    courses = Course.objects.all()  # Only show courses assigned to this lecturer
     return render(request, 'lecturers/create_assignment.html', {'courses': courses})
 
 # View submissions for a specific assignment

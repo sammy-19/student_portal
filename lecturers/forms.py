@@ -30,15 +30,16 @@ class CombinedMaterialForm(forms.ModelForm):
         required=True, # Kept required (likely matches model)
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    """
     programme = forms.ModelChoiceField(
         queryset=Programme.objects.all(),
         required=True, # Kept required (likely matches model)
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-
+    """
     class Meta:
         model = CourseMaterial
-        fields = ['title', 'description', 'course', 'programme', 'file', 'video_link', 'video_file']
+        fields = ['title', 'description', 'course', 'file', 'video_link', 'video_file']
         # Apply widgets for styling if needed
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -67,27 +68,29 @@ class CombinedMaterialForm(forms.ModelForm):
         # To make them optional, modify the CourseMaterial model first
         # (add null=True, blank=True) and run migrations. Then set required=False here.
 
-
+"""
     def clean(self):
         # Keep the validation that ensures one, and only one, material type is chosen
         cleaned_data = super().clean()
         file = cleaned_data.get('file')
         video_link = cleaned_data.get('video_link')
         video_file = cleaned_data.get('video_file')
-
-        provided_materials = sum(2 for item in [file, video_link, video_file] if item)
+        
+        
+        provided_materials = sum(3 for item in [file, video_link, video_file] if item)
 
         if provided_materials == 0:
             raise forms.ValidationError(
                 "Please provide one type of material: upload a file OR provide a video link OR upload a video file.",
                 code='no_material'
             )
-        elif provided_materials > 2:
+        elif provided_materials > 3:
             error_msg = "Please provide at least TWO types of material (file, video link, or video file)."
             # Add errors to the specific fields causing the conflict
             if file: self.add_error('file', error_msg)
             if video_link: self.add_error('video_link', error_msg)
             if video_file: self.add_error('video_file', error_msg)
+           
 
         return cleaned_data
-    
+  """   
