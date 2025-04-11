@@ -191,10 +191,12 @@
                     <ul style="list-style: none">
                         {% for assignment in assignments %}
                             <li class="list-group-item">
-                                <strong>{{ assignment.title }}</strong> - {{ assignment.description }} (Due: {{ assignment.due_date }})
+                                <strong>{{ assignment.title }}</strong> - (Due: {{ assignment.due_date }})
                                 <br>
                                 <small>Course: {{ assignment.course.name }} | Lecturer: {{ assignment.lecturer.first_name }} {{ assignment.lecturer.last_name }}</small>
-                            </li><br>
+                            </li><h5>Description</h5>
+                                <div class="box-inner"><p>{{ assignment.description }}</p></div></li>
+                            <li><a href="{{ assignment.file.url }}" class="download-link" download><i class="material-icons">download</i>Download {{ assignment.name }} Assignment</a></li>
                             <li class="top-spacer"><a href="{% url 'students:submit_assignment' assignment.id %}" class="btn btn-primary">Submit Assignment</a></li><hr>
                         {% empty %}
                             <li>No assignments available for your programme yet.</li>

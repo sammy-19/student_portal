@@ -107,6 +107,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     due_date = models.DateField()
+    file = models.FileField(upload_to='assignments/', default='course_materials/finacial_statements.pdf')
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lecturer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_lecturer')
     programme = models.CharField(max_length=100)
@@ -116,15 +117,23 @@ class Assignment(models.Model):
 
 class Submission(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)
+    assignment = models.ForeignKey(Assignment, on_delete=models.SET_NULL, null=True)
+    assignment_title_at_submission = models.CharField(max_length=255, blank=True)
     file = models.FileField(upload_to='submissions/')
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.student.username} - {self.assignment.title}'
+         # Use the stored title if assignment is gone
+         title = self.assignment.title if self.assignment else self.assignment_title_at_submission
+         return f'{self.student.user.username} - {title}'
 
 class Result(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    assignment = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING)  # Ensure this field is present
+    assignment = models.ForeignKey(Assignment, on_delete=models.SET_NULL, null=True)
+    assignment_title_at_grading = models.CharField(max_length=255, blank=True)
     grade = models.IntegerField()
+    
+    def __str__(self):
+        title = self.assignment.title if self.assignment else self.assignment_title_at_grading
+        return f"Result for {self.student.user.username} on {title}"

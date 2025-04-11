@@ -51,6 +51,7 @@
     <div class="container pseudo-line">
         <aside class="sidebar">
             <h2>Navigation</h2>
+            <a href="{% url 'students: student_dashboard' %}" class="btn button" alt='Homepage'>Dashboard</a>
             </aside>
 
         <section class="contents">
@@ -59,9 +60,6 @@
                   <h2>{{ course.name }} - Video Tutorials</h2>
                   <div class="video-progress">
                     <span id="video-count"></span>
-                    <div class="progress-circle" id="progress-circle">
-                      <span id="progress-percentage"></span>
-                    </div>
                   </div>
                 </div>
 

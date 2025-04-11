@@ -89,6 +89,7 @@ def create_assignment(request):
         due_date = request.POST.get('due_date')
         course_id = request.POST.get('course')
         course = Course.objects.get(id=course_id)
+        file = request.POST.get('file')
         #programme = request.POST.get('programme')
         
         # Include the lecturer's programme when creating an assignment
@@ -97,6 +98,7 @@ def create_assignment(request):
             description=description,
             due_date=due_date,
             course=course,
+            file=file,
             lecturer=request.user,
            # programme=programme   Save the programme
         )
