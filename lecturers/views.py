@@ -93,24 +93,7 @@ def create_assignment(request):
 
         # --- Correctly get the uploaded file from request.FILES ---
         assignment_file = request.FILES.get('file') # Use request.FILES.get()
-        """
-        # Basic validation - Recommend using a Django Form for proper validation
-        if not all([title, description, due_date, course_id]):
-            messages.error(request, "Please fill in Title, Description, Due Date, and Course.")
-            course = Course.objects.all() # Fetch courses again for re-rendering
-            # Pass back submitted data to pre-fill form (optional but good UX)
-            form_data = request.POST
-            return render(request, 'lecturers/create_assignment.html', {'courses': courses, 'form_data': form_data})
-        # You might want to add validation for assignment_file if it's mandatory
-        
-        try:
-            course = Course.objects.get(id=course_id)
-        except Course.DoesNotExist:
-             messages.error(request, "Selected course not found.")
-             courses = lecturer.assigned_courses.all()
-             form_data = request.POST
-             return render(request, 'lecturers/create_assignment.html', {'courses': courses, 'form_data': form_data})
-        """
+
         # Create the Assignment object, passing the file object
         try:
              Assignment.objects.create(
