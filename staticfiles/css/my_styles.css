@@ -450,12 +450,45 @@ button#viewAllCourses:hover {
 
 .calendar-overview {
     width: 85%;
-    margin-top: 20px; /* Add margin to separate from other overview items */
+    margin-top: 20px;
 }
 
 
 #dpdown h1 {
     display: none;
+}
+
+/* Styling for the description container */
+.box-inner {
+    background-color: #f8f9fa; 
+    border: 1px solid #dee2e6; 
+    border-radius: 4px;        
+    padding: 12px;            
+    margin-top: 4px;           
+    margin-bottom: 15px;        
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.15);
+
+    /* Limiting the height and add scrollbar for long descriptions */
+    max-height: 250px;          
+    overflow-y: auto;           
+    color: #333;
+}
+
+/* Style the paragraph within the box */
+.box-inner p {
+    margin: 0;              
+    text-align: justify;   
+    line-height: 1.6;      
+    font-size: 0.95em;     
+}
+
+/* Style the 'Description' heading above the box */
+.assignment-list h5 {
+    margin-top: 15px;      
+    margin-bottom: 3px;       
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #b48181;            
 }
 
 /* Footer */
@@ -529,6 +562,36 @@ footer {
     .course-info {
         min-width: 180px; /* Adjust min-width for mobile course items */
         margin: 10px; /* Adjust margin for mobile course items */
+    }
+
+    .sub-nav .btn {
+        display: block;
+        width: 90%;
+        margin-bottom: 10px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .sub-nav .btn:last-child {
+        margin-bottom: 0;
+    }
+     .sub-nav {
+         border-bottom: none;
+         padding-bottom: 0;
+     }
+
+       /* --- NEW: Rules for buttons inside .space container --- */
+    .space .btn { /* Target buttons inside the div with class="space" */
+        display: block;       /* Stack the buttons */
+        width: 90%;          /* Make them full-width */
+        margin-bottom: 10px;  /* Add space below each */
+        text-align: center;   /* Center text (optional) */
+        box-sizing: border-box; /* Include padding/border in width */
+    }
+
+    /* Remove margin from the last button within .space */
+    .space .btn:last-child {
+        margin-bottom: 0;
+
     }
 }
 
@@ -648,6 +711,13 @@ footer {
         padding: 8px 15px;
     }
 
+    .assignment-list {margin-right: 7%;}
+
+    .assignment-list ul {
+        padding-right: 10px;
+        margin-right: 7%;
+    }
+
     footer {
         padding: 5px;
     }
@@ -672,3 +742,4 @@ footer {
         margin-right: auto;
     }
 }
+
