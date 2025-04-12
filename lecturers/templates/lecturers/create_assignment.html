@@ -1,56 +1,57 @@
 {% extends "base.html" %}
 
 {% block log %}
-<div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-            <a class="nav-link" href="{% url 'lecturers:lecturer_dashboard' %}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'lecturers:lecturer_logout' %}">Logout</a>
-        </li>
-    </ul>
-</div>
+{# ... your navbar code ... #}
 {% endblock log %}
 
 {% block content %}
 <h2>Create New Assignment</h2>
 
-<form method="POST">
+{# Add enctype to the form tag #}
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+
+    {# --- Display Messages --- #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert" style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %}; border: 1px solid {% if message.tags == 'error' %}red{% else %}green{% endif %}; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {# --- End Messages --- #}
+
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" name="title" required>
+        {# Use form_data passed back on error to retain values #}
+        <input type="text" class="form-control" name="title" required value="{{ form_data.title|default:'' }}">
     </div>
 
     <div class="form-group">
         <label for="description">Description</label>
-        <textarea class="form-control" name="description" rows="4" required></textarea>
+        <textarea class="form-control" name="description" rows="4" required>{{ form_data.description|default:'' }}</textarea>
     </div>
 
     <div class="form-group">
         <label for="due_date">Due Date</label>
-        <input type="date" class="form-control" name="due_date" required>
+        <input type="date" class="form-control" name="due_date" required value="{{ form_data.due_date|default:'' }}">
     </div>
 
     <div class="form-group">
         <label for="course">Course</label>
         <select class="form-control" name="course" required>
+            <option value="">---------</option> {# Default empty option #}
             {% for course in courses %}
-                <option value="{{ course.id }}">{{ course.name }}</option>
+                {# Select previous value on error #}
+                <option value="{{ course.id }}" {% if form_data.course == course.id|stringformat:"s" %}selected{% endif %}>{{ course.name }}</option>
             {% endfor %}
         </select>
     </div>
 
     <div class="form-group">
-        <label for="due_date">File</label>
-        <input type="file" class="form-control" name="file" required>
+        <label for="file">Assignment File</label>
+        <input type="file" class="form-control-file" name="file" required>
     </div>
-
-    <!--div class="form-group">
-        <label for="programme">Programme</label>
-        <input type="text" class="form-control" name="programme" required>
-    </div-->
 
     <button type="submit" class="btn btn-primary">Create Assignment</button>
 </form>

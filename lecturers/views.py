@@ -82,31 +82,59 @@ def lecturer_dashboard(request):
 @login_required
 def create_assignment(request):
     lecturer = get_object_or_404(Lecturer, user=request.user)
-    
+
     if request.method == 'POST':
+        # Get data from POST
         title = request.POST.get('title')
         description = request.POST.get('description')
         due_date = request.POST.get('due_date')
         course_id = request.POST.get('course')
         course = Course.objects.get(id=course_id)
-        file = request.POST.get('file')
-        #programme = request.POST.get('programme')
-        
-        # Include the lecturer's programme when creating an assignment
-        Assignment.objects.create(
-            title=title,
-            description=description,
-            due_date=due_date,
-            course=course,
-            file=file,
-            lecturer=request.user,
-           # programme=programme   Save the programme
-        )
-        return redirect('lecturers:lecturer_dashboard')
-    
-    courses = Course.objects.all()  # Only show courses assigned to this lecturer
-    return render(request, 'lecturers/create_assignment.html', {'courses': courses})
 
+        # --- Correctly get the uploaded file from request.FILES ---
+        assignment_file = request.FILES.get('file') # Use request.FILES.get()
+        """
+        # Basic validation - Recommend using a Django Form for proper validation
+        if not all([title, description, due_date, course_id]):
+            messages.error(request, "Please fill in Title, Description, Due Date, and Course.")
+            course = Course.objects.all() # Fetch courses again for re-rendering
+            # Pass back submitted data to pre-fill form (optional but good UX)
+            form_data = request.POST
+            return render(request, 'lecturers/create_assignment.html', {'courses': courses, 'form_data': form_data})
+        # You might want to add validation for assignment_file if it's mandatory
+        
+        try:
+            course = Course.objects.get(id=course_id)
+        except Course.DoesNotExist:
+             messages.error(request, "Selected course not found.")
+             courses = lecturer.assigned_courses.all()
+             form_data = request.POST
+             return render(request, 'lecturers/create_assignment.html', {'courses': courses, 'form_data': form_data})
+        """
+        # Create the Assignment object, passing the file object
+        try:
+             Assignment.objects.create(
+                 title=title,
+                 description=description,
+                 due_date=due_date,
+                 course=course,
+                 file=assignment_file, # Assign the actual file object here
+                 lecturer=request.user,
+                 # programme=programme logic removed based on previous interactions
+             )
+             messages.success(request, f"Assignment '{title}' created successfully.")
+             return redirect('lecturers:lecturer_dashboard') # Redirect back to dashboard
+        except Exception as e:
+             # Catch potential errors during creation
+             messages.error(request, f"An error occurred while creating the assignment: {e}")
+             courses = lecturer.assigned_courses.all()
+             form_data = request.POST
+             return render(request, 'lecturers/create_assignment.html', {'courses': courses, 'form_data': form_data})
+
+    # GET request
+    # Show only courses assigned to this lecturer in the dropdown
+    course = Course.objects.all()
+    return render(request, 'lecturers/create_assignment.html', {'courses': course})
 # View submissions for a specific assignment
 @login_required
 def view_submissions(request):
