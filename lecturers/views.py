@@ -129,23 +129,35 @@ def view_submissions(request):
 
 @login_required
 def create_course(request):
-    lecturer = get_object_or_404(Lecturer, user=request.user)  # Get the current logged-in lecturer
-    
+    # Use request.user directly if your Lecturer model has a OneToOneField to User named 'user'
+    # Or adjust based on how you link Django User to Lecturer
+    lecturer = get_object_or_404(Lecturer, user=request.user)
+
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
-        
-        # Create the new course
-        course = Course.objects.create(name=name, description=description)
-        
-        # Assign the course to the lecturer
-        lecturer.assigned_courses.add(course)
-        lecturer.save()  # Save the lecturer instance to persist the changes
-        
-        return redirect('lecturers:lecturer_dashboard')
-    
-    return render(request, 'lecturers/create_course.html')
+        # MODIFICATION: Get the image file from request.FILES
+        image_file = request.FILES.get('image') # Use .get() to handle missing file gracefully
 
+        # Basic validation check (consider using Django Forms for robust validation)
+        if name and description:
+            # Create the new course, passing the image file
+            course = Course.objects.create(
+                name=name,
+                description=description,
+                image=image_file # Assign the uploaded file object here
+                                 # Django handles saving it via the configured storage (e.g., Cloudinary)
+            )
+
+            lecturer.assigned_courses.add(course)
+            # lecturer.save() # Not typically needed just for adding to M2M
+
+            return redirect('lecturers:lecturer_dashboard')
+        else:
+            pass # Or add context={'error': 'Name and description required.'}
+
+    # Render the form for GET request or if POST failed validation (in a more robust setup)
+    return render(request, 'lecturers/create_course.html')
 
 @login_required
 def edit_course(request, course_id):
